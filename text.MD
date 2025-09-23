@@ -15,3 +15,9 @@ Reddit : usr  Sweet-Character-8854,   pass :dsadasdasnLmn#g6h7
 youtube : usr : jacktrack-q9q  pass: kndhudsJasj#k8l
 
 githubb  :gutenvopo klfnhfpaNmsfjh#y6u9
+
+git clone --no-checkout --filter=blob:none https://github.com/jakevdp/PythonDataScienceHandbook.git
+
+-------
+#########
+REPO_URL="https://github.com/jakevdp/PythonDataScienceHandbook.git" FOLDER_PATH="notebooks" BRANCH="master" DEST="LearningNotebooks" tmpdir="$(mktemp -d)" \ && git clone --no-checkout --filter=blob:none --depth=1 -b "$BRANCH" "$REPO_URL" "$tmpdir" \ && cd "$tmpdir" \ && git sparse-checkout init --cone \ && git sparse-checkout set "$FOLDER_PATH" \ && git checkout \ && mkdir -p "../$DEST" \ && rsync -a "$FOLDER_PATH"/ "../$DEST"/ \ && cd .. \ && rm -rf "$tmpdir" \ && echo "✅ Downloaded '$FOLDER_PATH' to
