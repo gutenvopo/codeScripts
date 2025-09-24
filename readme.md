@@ -1,4 +1,4 @@
-🔥 Lookin good already!📑
+🔥 Looking good already!📑
 
 ## Table of Contents
 - [About](#-about)
