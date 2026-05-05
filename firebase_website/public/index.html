@@ -1,0 +1,240 @@
+
+<style>
+  .mpesa-wrap { max-width: 420px; margin: 32px auto; font-family: var(--font-sans); }
+  .mpesa-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 24px; }
+  .mpesa-card h2 { font-size: 18px; font-weight: 500; margin: 0 0 20px; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
+  .field-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; display: block; }
+  .field-group { margin-bottom: 16px; }
+  input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; }
+  .pay-btn { width: 100%; padding: 11px; font-size: 15px; font-weight: 500; border-radius: var(--border-radius-md); background: #1D9E75; color: #fff; border: none; cursor: pointer; transition: opacity 0.15s; }
+  .pay-btn:hover { opacity: 0.88; }
+  .pay-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status-box { margin-top: 16px; border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 13px; line-height: 1.6; display: none; border: 0.5px solid; }
+  .status-box.info    { background: var(--color-background-info);    border-color: var(--color-border-info);    color: var(--color-text-info); }
+  .status-box.success { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+  .status-box.error   { background: var(--color-background-danger);  border-color: var(--color-border-danger);  color: var(--color-text-danger); }
+  .status-icon { font-size: 16px; margin-right: 4px; }
+  .status-title { font-weight: 500; margin-bottom: 4px; }
+  .status-detail { font-size: 12px; opacity: 0.85; }
+  .status-hint { font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 0.5px solid currentColor; opacity: 0.7; }
+</style>
+
+<div class="mpesa-wrap">
+  <div class="mpesa-card">
+    <h2>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><rect width="24" height="24" rx="6" fill="#1D9E75"/><text x="12" y="16.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">M</text></svg>
+      Pay with M-Pesa
+    </h2>
+
+    <div class="field-group">
+      <label class="field-label" for="phoneNumber">Phone number</label>
+      <input id="phoneNumber" type="text" placeholder="07XX XXX XXX" />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="amount">Amount (KES)</label>
+      <input id="amount" type="number" value="1" min="1" />
+    </div>
+
+    <button class="pay-btn" id="stkPushBtn">Pay via M-Pesa</button>
+
+    <div class="status-box" id="statusBox">
+      <div class="status-title" id="statusTitle"></div>
+      <div class="status-detail" id="statusDetail"></div>
+      <div class="status-hint" id="statusHint"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FUNCTION_URL = "https://us-central1-pdfwebsitedwnld.cloudfunctions.net/start_stk_push";
+
+const btn    = document.getElementById("stkPushBtn");
+const box    = document.getElementById("statusBox");
+const title  = document.getElementById("statusTitle");
+const detail = document.getElementById("statusDetail");
+const hint   = document.getElementById("statusHint");
+
+function showStatus(type, titleText, detailText, hintText) {
+  box.className = "status-box " + type;
+  box.style.display = "block";
+  title.textContent  = titleText;
+  detail.textContent = detailText  || "";
+  hint.textContent   = hintText    || "";
+  hint.style.display = hintText ? "block" : "none";
+}
+
+function classifyHttpError(status, data) {
+  const msg = (data && (data.error || data.message)) || "";
+  
+  const map = {
+    400: {
+      title: "Invalid request — bad input sent to the server",
+      detail: msg || "The phone number or amount may be in the wrong format.",
+      hint: "Check that your phone number starts with 07 or 01 (10 digits) and the amount is at least KES 1."
+    },
+    401: {
+      title: "Authentication failed — M-Pesa credentials rejected",
+      detail: msg || "The server could not authenticate with Safaricom's API.",
+      hint: "This is a server-side configuration issue. Contact support — your Consumer Key or Consumer Secret may be expired."
+    },
+    403: {
+      title: "Access denied — your account is not authorised for this action",
+      detail: msg || "Safaricom returned a 403 Forbidden response.",
+      hint: "Your M-Pesa shortcode may not have STK Push enabled. Verify your Till/Paybill permissions on the Daraja portal."
+    },
+    404: {
+      title: "Service endpoint not found (404)",
+      detail: msg || "The Cloud Function URL does not exist or has been deleted.",
+      hint: "Make sure the FUNCTION_URL in the page source matches the deployed function URL in your Firebase console."
+    },
+    408: {
+      title: "Request timed out — Safaricom did not respond in time",
+      detail: msg || "The STK Push request took too long and was cancelled.",
+      hint: "This is usually temporary. Wait a few seconds and try again. If it persists, check Safaricom's API status."
+    },
+    422: {
+      title: "Unprocessable request — server understood but rejected the data",
+      detail: msg || "The values you submitted passed basic checks but failed validation on the server.",
+      hint: "Ensure the phone number is registered on Safaricom and the amount does not exceed M-Pesa transaction limits."
+    },
+    429: {
+      title: "Too many requests — rate limit reached",
+      detail: msg || "You or the server has made too many requests to Safaricom's API in a short time.",
+      hint: "Wait at least 60 seconds before trying again. If this happens often, your app may need request throttling."
+    },
+    500: {
+      title: "Internal server error — something crashed on the backend",
+      detail: msg || "The Cloud Function encountered an unhandled exception.",
+      hint: "Check your Firebase Function logs in the Google Cloud Console for the Python traceback. Common causes: missing .env variables (CONSUMER_KEY, CONSUMER_SECRET, SHORTCODE, PASSKEY), or a code bug."
+    },
+    502: {
+      title: "Bad gateway — upstream service returned an invalid response",
+      detail: msg || "The server received a malformed response from Safaricom's API.",
+      hint: "Safaricom's Daraja API may be experiencing issues. Check https://developer.safaricom.co.ke for outages."
+    },
+    503: {
+      title: "Service unavailable — the server is temporarily down",
+      detail: msg || "The Cloud Function is not responding.",
+      hint: "Your Firebase function may be cold-starting or undergoing maintenance. Try again in 30 seconds."
+    }
+  };
+
+  const entry = map[status];
+  if (entry) return entry;
+
+  if (status >= 500) return {
+    title: `Server error (HTTP ${status})`,
+    detail: msg || "An unexpected server-side error occurred.",
+    hint: "Check Firebase and Google Cloud logs for more details."
+  };
+
+  return {
+    title: `Request failed (HTTP ${status})`,
+    detail: msg || "The server returned an unexpected status code.",
+    hint: "Open browser DevTools → Network tab to inspect the full response."
+  };
+}
+
+function classifyNetworkError(err) {
+  const msg = err.message || "";
+
+  if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("net::ERR")) {
+    return {
+      title: "Network error — could not reach the server",
+      detail: "Your browser failed to connect to the Cloud Function endpoint.",
+      hint: "Check your internet connection. If you're online, the FUNCTION_URL in the page source may be wrong, or the Cloud Function may not be deployed yet."
+    };
+  }
+  if (msg.includes("CORS") || msg.includes("cross-origin") || msg.includes("blocked")) {
+    return {
+      title: "CORS error — the server blocked this browser request",
+      detail: "The Cloud Function did not return the correct CORS headers.",
+      hint: "In your Python function, make sure you're returning 'Access-Control-Allow-Origin: *' in the response headers and handling OPTIONS preflight requests."
+    };
+  }
+  if (msg.includes("timeout") || msg.includes("Timeout")) {
+    return {
+      title: "Connection timed out — server took too long to respond",
+      detail: "The request to the Cloud Function exceeded the browser's timeout limit.",
+      hint: "Your Firebase function may be slow to cold-start. Try again. If persistent, increase the function timeout in firebase.json."
+    };
+  }
+  if (msg.includes("JSON") || msg.includes("Unexpected token") || msg.includes("SyntaxError")) {
+    return {
+      title: "Invalid response — server did not return valid JSON",
+      detail: `Parse error: ${msg}`,
+      hint: "The Cloud Function returned HTML or plain text instead of JSON. Check your Python function's return statement — it must return jsonify(...) with Content-Type: application/json."
+    };
+  }
+  return {
+    title: "Unexpected error occurred",
+    detail: msg || "An unknown error prevented the request from completing.",
+    hint: "Open browser DevTools (F12) → Console tab for more details. Check that your Firebase function is deployed and the URL is correct."
+  };
+}
+
+function validateInputs(phone, amount) {
+  const cleaned = phone.replace(/\s+/g, "");
+  if (!cleaned) return "Phone number is required.";
+  if (!/^(07|01)\d{8}$/.test(cleaned)) return "Enter a valid Safaricom number starting with 07 or 01 (10 digits total).";
+  if (!amount || amount < 1) return "Amount must be at least KES 1.";
+  if (amount > 150000) return "M-Pesa STK Push supports a maximum of KES 150,000 per transaction.";
+  return null;
+}
+
+btn.addEventListener("click", async () => {
+  const phoneRaw = document.getElementById("phoneNumber").value.trim();
+  const amount   = Number(document.getElementById("amount").value);
+
+  const validationError = validateInputs(phoneRaw, amount);
+  if (validationError) {
+    showStatus("error", "Invalid input — please correct before proceeding", validationError, "Fix the issue above and try again.");
+    return;
+  }
+
+  const phone = phoneRaw.replace(/\s+/g, "");
+
+  btn.disabled = true;
+  showStatus("info", "Sending STK Push request…", "Connecting to M-Pesa. Please wait — this usually takes 3–8 seconds.", "");
+
+  let response, data;
+
+  try {
+    response = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phoneNumber: phone, amount })
+    });
+  } catch (err) {
+    btn.disabled = false;
+    const info = classifyNetworkError(err);
+    showStatus("error", info.title, info.detail, info.hint);
+    return;
+  }
+
+  try {
+    data = await response.json();
+  } catch (err) {
+    btn.disabled = false;
+    const info = classifyNetworkError(err);
+    showStatus("error", info.title, info.detail, info.hint);
+    return;
+  }
+
+  btn.disabled = false;
+
+  if (!response.ok) {
+    const info = classifyHttpError(response.status, data);
+    showStatus("error", info.title, info.detail, info.hint);
+    return;
+  }
+
+  const desc = data.ResponseDescription || data.CustomerMessage || "Check your phone for the M-Pesa prompt.";
+  showStatus("success",
+    "STK Push sent successfully",
+    desc,
+    "Enter your M-Pesa PIN on your phone when prompted. The prompt expires in 30 seconds."
+  );
+});
+</script>

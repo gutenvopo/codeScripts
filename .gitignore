@@ -1,0 +1,30 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment directories
+rwakiDev/
+rwakiDev_v2/
+
+# Build and distribution artifacts
+build/
+dist/
+*.exe
+*.pkg
+*.pyz
+*.whl
+*.tar.gz
+*.7z
+*.webm
+*.mp3
+*.part
+
+# Editor settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.pindex.tmp
+Thumbs.db
+.DS_Store
