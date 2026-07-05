@@ -1,0 +1,1 @@
+"""qBittorrent Web API integration."""

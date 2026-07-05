@@ -1,0 +1,44 @@
+[project]
+name = "qbsearch"
+dynamic = ["version"]
+description = "Modern qBittorrent search front-end for Windows"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "customtkinter>=5.2.2",
+    "keyring>=25.0",
+    "pyperclip>=1.9",
+    "requests>=2.32",
+    "truststore>=0.10",
+]
+
+[project.scripts]
+qbsearch = "qbsearch.__main__:main"
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.14",
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qbsearch"]
+
+[tool.hatch.version]
+path = "src/qbsearch/version.py"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

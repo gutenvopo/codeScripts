@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Kazi Tracker icon — KaziTrackerLogo scaled to 80% from viewport centre (54,54).
+    Clipboard spans x=32..76, y=27..83 — clear black background visible on all sides.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- ── Clipboard body — DarkSurface fill + cyan outline ── -->
+    <!-- Rounded rect (32,27)→(76,83), r=5 -->
+    <path
+        android:fillColor="#0D1225"
+        android:strokeColor="#D900E5FF"
+        android:strokeWidth="1.8"
+        android:pathData="M37,27 H71 Q76,27 76,32 V78 Q76,83 71,83 H37 Q32,83 32,78 V32 Q32,27 37,27 Z"/>
+
+    <!-- ── Clipboard tab — centred at top, overlaps clipboard top edge ── -->
+    <!-- Rounded rect (45,24)→(63,31), r=2 -->
+    <path
+        android:fillColor="#0D1225"
+        android:strokeColor="#D900E5FF"
+        android:strokeWidth="1.8"
+        android:pathData="M47,24 H61 Q63,24 63,26 V29 Q63,31 61,31 H47 Q45,31 45,29 V26 Q45,24 47,24 Z"/>
+
+    <!-- ── Inner content area — darkest fill, no stroke ── -->
+    <!-- Rounded rect (33,37)→(75,81), r=3 -->
+    <path
+        android:fillColor="#080C18"
+        android:pathData="M36,37 H72 Q75,37 75,40 V78 Q75,81 72,81 H36 Q33,81 33,78 V40 Q33,37 36,37 Z"/>
+
+    <!-- ── Row 1 — completed ── -->
+
+    <!-- Checkmark (full cyan, rounded caps) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M38,46 L40,48 L43,43"/>
+
+    <!-- Strikethrough line (35% cyan) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#5900E5FF"
+        android:strokeWidth="1.4"
+        android:pathData="M38,46 H73"/>
+
+    <!-- ── Row 2 — in progress ── -->
+
+    <!-- Filled dot at (40,58), r=2 (65% cyan) -->
+    <path
+        android:fillColor="#A600E5FF"
+        android:pathData="M38,58 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 Z"/>
+
+    <!-- Full line (65% cyan) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#A600E5FF"
+        android:strokeWidth="1.4"
+        android:pathData="M38,58 H73"/>
+
+    <!-- ── Row 3 — pending ── -->
+
+    <!-- Hollow dot at (40,68), r=2 (35% cyan stroke) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#5900E5FF"
+        android:strokeWidth="1.2"
+        android:pathData="M38,68 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 Z"/>
+
+    <!-- Shorter line (30% cyan) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#4D00E5FF"
+        android:strokeWidth="1.4"
+        android:pathData="M38,68 H68"/>
+
+    <!-- ── Corner accent dot at (72,32), r=1.5 (50% cyan) ── -->
+    <path
+        android:fillColor="#8000E5FF"
+        android:pathData="M70.5,32 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0 Z"/>
+
+</vector>

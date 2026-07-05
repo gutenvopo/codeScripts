@@ -1,0 +1,30 @@
+timestamp,server,sponsor,location,country,cc,lat,lon,isp,ip,download_mbps,upload_mbps,ping_ms,jitter_ms,comments
+2026-06-21 21:07:59,DUR,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,KE-SFC-GPRS-EDGE-3G-LTE-Mobile WiFi-SERVICE-IP,105.161.229.201,5.98,1.98,279.01,147.51,"night with slow connection in Nandi Hills, Safaricom 5g again, super slow, going to restart connection"
+2026-06-21 20:56:50,NBO,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,KE-SFC-GPRS-EDGE-3G-LTE-Mobile WiFi-SERVICE-IP,105.161.229.201,5.0,1.23,337.83,925.06,"night with slow connection in Nandi Hills, Safaricom 5g"
+2026-06-15 13:11:24,MBA,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,For Safaricom KENYA Enterprise Business Unit,197.248.135.5,23.69,27.11,118.96,70.3,"without using cloudflare vpn, on ethernet, in kesses"
+2026-06-15 12:32:47,MBA,Cloudflare,"Eldoret, Uasin Gishu County, KE",KE,KE,0.52036,35.26993,For Safaricom KENYA Enterprise Business Unit,197.248.135.5,23.56,15.23,151.55,370.62,"molly complained about royuter named ""Mike"" in kesses"
+2026-06-14 18:52:53,JNB,Cloudflare,"Benoni, Gauteng, ZA",ZA,ZA,-26.18848,28.32078,"Cloudflare London, LLC",2a09:bac5:d4f7:2e64::49f:1f,17.81,13.02,296.93,43.17,at night in kessess on router
+2026-06-12 20:44:35,DUR,Cloudflare,"Eldoret, Uasin Gishu County, KE",KE,KE,0.52036,35.26993,For Safaricom KENYA Enterprise Business Unit,197.248.135.5,19.59,13.08,152.31,444.48,very jerky  internet in kesses tonight
+2026-06-12 18:18:43,DUR,Cloudflare,"N/A, N/A, KE",KE,KE,N/A,N/A,N/A,197.248.135.5,11.18,6.23,159.04,567.35,very bad lintermittent internet in kesses
+2026-06-07 21:46:34,FRA,Cloudflare,"Frankfurt am Main, Hesse, DE",DE,DE,50.11552,8.68417,Packethub S.A.,212.97.68.40,9.07,2.53,788.13,35.86,chnaged  nord vpn protocol to nordlynx (wireguard) in kesses
+timestamp,server,sponsor,location,country,cc,lat,lon,isp,ip,download_mbps,upload_mbps,ping_ms,jitter_ms,comments,Column1,Column2,Column3,Column4
+6/7/2026 21:19,DFW,Cloudflare,"Dallas, Texas, US",US,US,32.78306,-96.80667,Packethub S.A.,185.255.130.240,6.5,1.42,928.62,124.06,nordvpn connection to dallas USA,,,,
+6/7/2026 18:50,JNB,Cloudflare,"Benoni, Gauteng, ZA",ZA,ZA,-26.18848,28.32078,"Cloudflare London, LLC",2a09:bac5:d4f4:2e64::49f:4d,15.08,4.75,320.02,57.65,"using  cloudflares VPN ""warp"" in kesses",,,,
+6/6/2026 15:11,NBO,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,KE-SFC-GPRS-EDGE-3G-LTE-Mobile WiFi-SERVICE-IP,105.160.48.114,30.61,3.71,272.03,756.79,at  Samara and slamas place,,,,
+6/6/2026 10:54,MBA,Cloudflare,"Eldoret, Uasin Gishu County, KE",KE,KE,0.52036,35.26993,For Converged services in Eastern Region,41.139.184.9,18.22,18.89,114.68,108.59,EKA Hotel Wifi,,,,
+6/6/2026 10:54,MBA,Cloudflare,"Eldoret, Uasin Gishu County, KE",KE,KE,0.52036,35.26993,For Converged services in Eastern Region,41.139.184.9,18.22,18.89,114.68,108.59,,,,,
+6/3/2026 23:01,NBO,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,"SpaceX Services, Inc.",129.222.147.209,20.44,16.12,148.42,3695.88,"early mornign tesst, in kesses",,,,
+6/3/2026 15:22,MBA,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,For Safaricom KENYA Enterprise Business Unit,197.248.135.5,22.78,14.07,117.25,375.81,after paying my neternet bill in kesses,,,,
+6/3/2026 15:22,MBA,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,For Safaricom KENYA Enterprise Business Unit,197.248.135.5,22.78,14.07,117.25,375.81,,,,,
+5/31/2026 14:16,NBO,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,KE-SFC-GPRS-EDGE-3G-LTE-Mobile WiFi-SERVICE-IP,105.161.158.119,12.85,4.67,199.86,40.9,after storm in nandi hill on sheilas wifi,,,,
+5/27/2026 20:09,MRS,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,SAFARICOM PUBLIC POOL A,196.96.39.233,13.95,8.91,181.26,334.36,"Sheilas router in Nandi Hills, safaricom 5G",,,,
+5/21/2026 19:37,MRS,Cloudflare,"Nairobi, Nairobi County, KE",KE,KE,-1.28333,36.81667,SAFARICOM PUBLIC POOL A,196.96.33.138,16.2,3.89,210.44,57.93,"On my phones hotspot, in nandi hills",,,,
+2/4/2026 3:07,"Humble, TX",Tachus Fiber Internet,"Humble, TX, United States",United States,US,29.9988,-95.2622,Clouvider Limited,2.56.191.106,2.33,3.87,302.53,1020.24,connected to US -Dallas Nord VPN,,,,
+2/4/2026 1:16,Nairobi,AfriQ Networks Kenya,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,28.86,28.14,28.74,12.88,"took long, check latency and jitter",,,,
+2/3/2026 23:43,Nairobi,Unwired Communications,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,29.11,28.4,29.19,16.19,Looks good so far!,,,,
+2/3/2026 18:10,Nairobi,AfriQ Networks Kenya,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,28.9,29.39,29.51,17.22,again without vpn,,,,
+2/3/2026 17:57,Nairobi,AfriQ Networks Kenya,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,28.95,28.83,27.22,25.48,without VPN,,,,
+2/3/2026 16:14,Nairobi,Zuku,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,0.79,12.53,30.86,26.61,"test 3, have not reset adapter after  turning off vpn",,,,
+2/3/2026 16:14,Nairobi,Zuku,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,0.79,12.53,30.86,26.61,test 3,,,,
+2/3/2026 15:50,Nairobi,PepeaNet,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,4.93,26.05,44.32,0,writting another comment to test if recorded in log,,,,
+2/3/2026 15:50,Nairobi,PepeaNet,"Nairobi, Kenya",Kenya,KE,-1.2833,36.8167,Safaricom Business,41.139.243.39,4.93,26.05,44.32,0,,,,,

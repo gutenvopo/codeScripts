@@ -5,7 +5,7 @@ __pycache__/
 
 # Virtual environment directories
 rwakiDev/
-rwakiDev_v2/
+rwakiDev_v3/
 
 # Build and distribution artifacts
 build/
@@ -19,6 +19,9 @@ dist/
 *.webm
 *.mp3
 *.part
+!qbsearch/build/
+qbsearch/build/*
+!qbsearch/build/qbsearch.spec
 
 # Editor settings
 .vscode/

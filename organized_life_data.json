@@ -1,0 +1,17 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Easep data review",
+      "priority": "Medium",
+      "due": "2026-05-23",
+      "notes": "",
+      "created": "2026-05-23",
+      "done": false
+    }
+  ],
+  "habits": [],
+  "notes": "",
+  "today_win": {},
+  "focus_minutes": {}
+}

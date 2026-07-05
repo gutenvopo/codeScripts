@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 108 108">
+  <path fill="#080C18" d="M0 0H108V108H0Z"/>
+  <path fill="#00E5FF" fill-opacity=".0392" d="M0 54a54 54 0 1 0 108 0A54 54 0 1 0 0 54Z"/>
+  <path fill="#00E5FF" fill-opacity=".0784" d="M13 54a41 41 0 1 0 82 0 41 41 0 1 0-82 0Z"/>
+  <path fill="#00E5FF" fill-opacity=".1216" d="M24 54a30 30 0 1 0 60 0 30 30 0 1 0-60 0Z"/>
+  <path fill="#0D1225" stroke="#00E5FF" stroke-opacity=".851" stroke-width="1.8" d="M37 27h34q5 0 5 5v46q0 5-5 5H37q-5 0-5-5V32q0-5 5-5Z"/>
+  <path fill="#0D1225" stroke="#00E5FF" stroke-opacity=".851" stroke-width="1.8" d="M47 24h14q2 0 2 2v3q0 2-2 2H47q-2 0-2-2v-3q0-2 2-2Z"/>
+  <path fill="#080C18" d="M36 37h36q3 0 3 3v38q0 3-3 3H36q-3 0-3-3V40q0-3 3-3Z"/>
+  <path fill="none" stroke="#00E5FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m38 46 2 2 3-5"/>
+  <path fill="none" stroke="#00E5FF" stroke-opacity=".349" stroke-width="1.4" d="M38 46h35"/>
+  <path fill="#00E5FF" fill-opacity=".651" d="M38 58a2 2 0 1 0 4 0 2 2 0 1 0-4 0Z"/>
+  <path fill="none" stroke="#00E5FF" stroke-opacity=".651" stroke-width="1.4" d="M38 58h35"/>
+  <path fill="none" stroke="#00E5FF" stroke-opacity=".349" stroke-width="1.2" d="M38 68a2 2 0 1 0 4 0 2 2 0 1 0-4 0Z"/>
+  <path fill="none" stroke="#00E5FF" stroke-opacity=".302" stroke-width="1.4" d="M38 68h30"/>
+  <path fill="#00E5FF" fill-opacity=".502" d="M70.5 32a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0Z"/>
+</svg>

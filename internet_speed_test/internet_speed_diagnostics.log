@@ -1,0 +1,96 @@
+############################################################
+DIAGNOSTIC RUN - 2026-06-23 05:21:54 - reason=slow_speed
+############################################################
+
+============================================================
+A) CONTEXT
+============================================================
+Reason: slow_speed
+Timestamp: 2026-06-23 05:21:54
+Download: 6.91 Mbps
+Upload: 0.57 Mbps
+Ping: 6024.96 ms
+Jitter: 4060.79 ms
+Download delta vs expected: -8.09 Mbps
+Upload delta vs expected: -4.43 Mbps
+
+============================================================
+B) SYSTEM & NETWORK STACK
+============================================================
+Platform: Windows-11-10.0.26200-SP0
+Python: 3.13.13
+Hostname: rwakiBizz
+Primary hostname address: 192.168.150.165
+Local interface addresses: 192.168.150.165, fd9e:7153:bc86:0:5955:905a:104:8f4d, fd9e:7153:bc86:0:ac29:7e77:2b51:ed78, fe80::febe:6d37:66ae:b23f
+Active default-route interface: 192.168.150.165
+
+============================================================
+C) DNS RESOLUTION TIMING
+============================================================
+speed.cloudflare.com: 2.4 ms; A records=162.159.140.220, 172.66.0.218
+1.1.1.1: 0.0 ms; A records=1.1.1.1
+8.8.8.8: 0.0 ms; A records=8.8.8.8
+www.google.com: 47.5 ms; A records=142.251.150.119, 142.251.151.119, 142.251.152.119, 142.251.153.119, 142.251.154.119, 142.251.155.119, 142.251.156.119, 142.251.157.119
+
+============================================================
+D) TCP CONNECT TIMING
+============================================================
+speed.cloudflare.com:443: 374.9 ms SLOW
+1.1.1.1:443: 231.1 ms OK
+8.8.8.8:443: 46.3 ms OK
+www.google.com:443: 541.1 ms SLOW
+
+============================================================
+E) TLS HANDSHAKE INSPECTION
+============================================================
+speed.cloudflare.com: handshake=68.6 ms
+    Subject CN: speed.cloudflare.com
+    Issuer CN: WE1
+    Valid: Apr 28 07:59:03 2026 GMT to Jul 27 08:58:47 2026 GMT
+    TLS: TLSv1.3; Cipher: ('TLS_AES_256_GCM_SHA384', 'TLSv1.3', 256)
+1.1.1.1: handshake=57.1 ms
+    Subject CN: cloudflare-dns.com
+    Issuer CN: SSL.com SSL Intermediate CA ECC R2
+    Valid: Dec 31 19:20:01 2025 GMT to Dec 21 19:20:01 2026 GMT
+    TLS: TLSv1.3; Cipher: ('TLS_AES_256_GCM_SHA384', 'TLSv1.3', 256)
+8.8.8.8: handshake=178.5 ms
+    Subject CN: dns.google
+    Issuer CN: WR2
+    Valid: May 25 08:39:14 2026 GMT to Aug 17 08:39:13 2026 GMT
+    TLS: TLSv1.3; Cipher: ('TLS_AES_256_GCM_SHA384', 'TLSv1.3', 256)
+www.google.com: handshake=169.8 ms
+    Subject CN: www.google.com
+    Issuer CN: WE2
+    Valid: May 25 08:39:17 2026 GMT to Aug 17 08:39:16 2026 GMT
+    TLS: TLSv1.3; Cipher: ('TLS_AES_256_GCM_SHA384', 'TLSv1.3', 256)
+
+============================================================
+F) HTTP DIAGNOSTIC PROBE
+============================================================
+Cloudflare /meta: 366 bytes
+server: cloudflare
+cf-ray: a10005b509068a64-MBA
+cf-cache-status: <missing>
+alt-svc: <missing>
+x-amz-cf-id: <missing>
+
+============================================================
+G) PROXY / VPN DETECTION
+============================================================
+HTTP_PROXY: <not set>
+HTTPS_PROXY: <not set>
+ALL_PROXY: <not set>
+NO_PROXY: <not set>
+urllib proxies: <none>
+Interface Ethernet: D4-A2-CD-06-40-AC, 192.168.150.165, fd9e:7153:bc86:0:ac29:7e77:2b51:ed78, fd9e:7153:bc86:0:5955:905a:104:8f4d, fe80::febe:6d37:66ae:b23f
+Interface Wi-Fi: AC-F2-3C-74-FE-43, 169.254.198.253
+Interface Wi-Fi 3: AE-F2-3C-74-DE-63, 169.254.112.64, fe80::180c:3653:7005:4d7d
+Interface Wi-Fi 4: AE-F2-3C-74-CE-73, 169.254.243.61, fe80::11fd:50fd:ee0e:c1f5
+Interface Bluetooth Network Connection: AC-F2-3C-74-FE-44, 169.254.204.100, fe80::6673:4d83:3adb:c787
+Interface Loopback Pseudo-Interface 1: 127.0.0.1, ::1
+
+============================================================
+H) RECOMMENDATIONS
+============================================================
+1. Measured speed is below the configured threshold. Test by Ethernet and pause other traffic.
+Diagnostic run complete.

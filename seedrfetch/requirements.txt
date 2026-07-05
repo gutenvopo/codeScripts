@@ -1,0 +1,7 @@
+customtkinter>=5.2.2
+requests>=2.32
+truststore>=0.10
+certifi
+cryptography
+seedrcc
+Pillow

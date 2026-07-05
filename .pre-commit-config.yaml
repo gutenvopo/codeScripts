@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-changelog
+        name: Require CHANGELOG.md update
+        entry: python scripts/check_changelog.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: check-requirements
+        name: Verify requirements.txt covers all imports
+        entry: python scripts/check_requirements.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]

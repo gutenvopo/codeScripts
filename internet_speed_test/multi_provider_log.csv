@@ -1,0 +1,7 @@
+timestamp,provider,download_mbps,upload_mbps,ping_ms,jitter_ms,server,isp,error
+2026-06-23 03:03:13,Cloudflare,,,,,,,"Network error calling Cloudflare (GET /cdn-cgi/trace, timeout=15s, payload=0.00 MB): [Errno 11001] getaddrinfo failed"
+2026-06-23 03:03:13,Fast.com,,,,,,,<urlopen error [Errno 11001] getaddrinfo failed>
+2026-06-23 03:08:04,Cloudflare,14.49808547477485,7.587539418202373,173.38560000644065,45.986699988134205,"NBO (Nairobi, KE)",SAFARICOM PUBLIC POOL A,
+2026-06-23 03:08:04,Fast.com,14.450240672685227,,169.02460000710562,,"NAIROBI, KE",N/A,
+2026-06-23 03:34:28,Cloudflare,13.236208189855725,8.968425425135855,195.99429999652784,39.51620000589173,"MBA (Nairobi, KE)",SAFARICOM PUBLIC POOL A,
+2026-06-23 03:34:28,Fast.com,14.763246504107881,,171.23969999374822,,"Thika town, KE",N/A,

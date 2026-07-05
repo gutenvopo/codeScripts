@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Deep navy base -->
+    <path
+        android:fillColor="#080C18"
+        android:pathData="M0,0 H108 V108 H0 Z"/>
+
+    <!-- Glow ring 1 — largest, faintest (4% cyan) -->
+    <path
+        android:fillColor="#0A00E5FF"
+        android:pathData="M0,54 a54,54 0 1,0 108,0 a54,54 0 1,0 -108,0 Z"/>
+
+    <!-- Glow ring 2 (8% cyan) -->
+    <path
+        android:fillColor="#1400E5FF"
+        android:pathData="M13,54 a41,41 0 1,0 82,0 a41,41 0 1,0 -82,0 Z"/>
+
+    <!-- Glow ring 3 — smallest, most visible (12% cyan) -->
+    <path
+        android:fillColor="#1F00E5FF"
+        android:pathData="M24,54 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0 Z"/>
+
+</vector>

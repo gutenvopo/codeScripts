@@ -19,7 +19,7 @@ Param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $PythonExe) {
-    $preferredPython = Join-Path $PSScriptRoot 'rwakiDev_v2\Scripts\python.exe'
+    $preferredPython = Join-Path $PSScriptRoot 'rwakiDev_v3\Scripts\python.exe'
     if (Test-Path -LiteralPath $preferredPython) {
         $PythonExe = $preferredPython
     }

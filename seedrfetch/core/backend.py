@@ -1,0 +1,43 @@
+"""Backend contract and friendly network errors."""
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from typing import Any
+
+
+class BackendError(RuntimeError):
+    pass
+
+
+def translate_error(exc: Exception) -> str:
+    from core.errors import translate
+    return translate(exc).title
+
+
+class SeedrBackend(ABC):
+    @abstractmethod
+    def user_info(self) -> dict[str, Any]: ...
+    @abstractmethod
+    def get_drive(self) -> dict[str, Any]: ...
+    @abstractmethod
+    def get_folder(self, folder_id: int) -> dict[str, Any]: ...
+    @abstractmethod
+    def add_magnet(self, link: str) -> dict[str, Any]: ...
+    @abstractmethod
+    def add_torrent_url(self, url: str) -> dict[str, Any]: ...
+    @abstractmethod
+    def add_link(self, raw: str) -> dict[str, Any]: ...
+    @abstractmethod
+    def download_file_request(self, file_id: int) -> tuple[str, Any]: ...
+    @abstractmethod
+    def download_folder_request(self, folder_id: int) -> tuple[str, Any]: ...
+    @abstractmethod
+    def get_file_url(self, file_id: int) -> str: ...
+    @abstractmethod
+    def get_folder_zip_url(self, folder_id: int) -> str: ...
+    @abstractmethod
+    def delete_file(self, file_id: int) -> Any: ...
+    @abstractmethod
+    def delete_folder(self, folder_id: int) -> Any: ...
+    @abstractmethod
+    def delete_torrent(self, torrent_id: int) -> Any: ...
