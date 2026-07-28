@@ -3,6 +3,13 @@ All notable changes to qbSearch are documented here.
 
 ## [Unreleased]
 ### Added
+- Open a live, copyable verbose activity window whenever a user requests a
+  magnet link. It reports direct-link and cache decisions, background detail
+  page requests, redirects, HTTP status and reason, response metadata, magnet
+  extraction, clipboard completion, and network failures while redacting URL
+  query strings. [src/qbsearch/core/magnet_resolver.py,
+  src/qbsearch/ui/results_table.py, src/qbsearch/ui/log_window.py,
+  tests/test_magnet_resolver.py, tests/test_log_window.py]
 - Add a reproducible Python 3.13 Windows packaging pipeline with a windowed
   PyInstaller onedir spec, bundled CustomTkinter/truststore/certifi assets,
   embedded executable version metadata, an Inno Setup per-user/all-users

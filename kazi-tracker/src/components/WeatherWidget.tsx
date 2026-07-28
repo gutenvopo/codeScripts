@@ -152,8 +152,16 @@ function WeatherGlyph({ code }: { code: number }) {
   );
 }
 
-export function WeatherWidget() {
-  const { weather, needsLocation, loading, error, loadManual } = useWeather();
+export function WeatherWidget({ uid }: { uid: string }) {
+  const {
+    weather,
+    needsLocation,
+    loading,
+    error,
+    loadManual,
+    loadCurrent,
+    chooseLocation,
+  } = useWeather(uid);
   const { formattedDate } = useNairobiDate();
   const [query, setQuery] = useState("");
   const celsius = weather ? Math.round(weather.temperature) : null;
@@ -211,20 +219,34 @@ export function WeatherWidget() {
             <h2>Where are you planning from?</h2>
             {error && <p>{error}</p>}
           </div>
-          <form onSubmit={submit}>
-            <LocateFixed size={18} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Nairobi, Kenya"
-              aria-label="Location"
-            />
-            <button type="submit">Use location</button>
-          </form>
+          <div className="location-options">
+            {navigator.geolocation && (
+              <button
+                className="current-location-button"
+                type="button"
+                onClick={() => void loadCurrent()}
+              >
+                <LocateFixed size={16} />
+                Use current location
+              </button>
+            )}
+            <form onSubmit={submit}>
+              <MapPin size={18} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Nairobi, Kenya"
+                aria-label="City or location"
+              />
+              <button type="submit">Use city</button>
+            </form>
+          </div>
         </div>
       )}
-      {weather && needsLocation && (
-        <button className="weather-change" onClick={() => setQuery("")}>Change</button>
+      {weather && !needsLocation && (
+        <button className="weather-change" onClick={chooseLocation}>
+          Change location
+        </button>
       )}
     </section>
   );

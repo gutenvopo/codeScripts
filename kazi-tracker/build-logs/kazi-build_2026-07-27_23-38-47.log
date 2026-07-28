@@ -1,0 +1,67 @@
+[2026-07-27 23:38:47.423] [SYSTEM] Kazi Tracker automated pipeline initialized.
+[2026-07-27 23:38:47.428] [INFO] Project directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:47.429] [INFO] Full diagnostic log: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\build-logs\kazi-build_2026-07-27_23-38-47.log
+[2026-07-27 23:38:47.432] [INFO] Lint validation will run before the production build.
+[2026-07-27 23:38:47.752] [SYSTEM] Beginning Kazi Tracker pipeline validation.
+[2026-07-27 23:38:47.752] [INFO] Expected project path: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:47.754] [INFO] Changing directory using: cd C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:47.755] [SUCCESS] Successfully entered the project directory.
+[2026-07-27 23:38:47.757] [INFO] Resolved working directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:47.764] [DIAGNOSTIC] ========== SYSTEM DIAGNOSTICS ==========
+[2026-07-27 23:38:47.765] [DIAGNOSTIC] Operating system: Microsoft Windows NT 10.0.26200.0
+[2026-07-27 23:38:47.765] [DIAGNOSTIC] Machine name: RWAKIBIZZ
+[2026-07-27 23:38:47.768] [DIAGNOSTIC] PowerShell: 7.6.4 (Core)
+[2026-07-27 23:38:47.768] [DIAGNOSTIC] Working directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:47.768] [DIAGNOSTIC] Node executable: C:\Program Files\nodejs\node.exe
+[2026-07-27 23:38:47.768] [DIAGNOSTIC] npm executable: C:\Program Files\nodejs\npm.cmd
+[2026-07-27 23:38:47.790] [DIAGNOSTIC] Node.js version: v24.15.0
+[2026-07-27 23:38:48.113] [DIAGNOSTIC] npm version: 11.12.1
+[2026-07-27 23:38:48.115] [DIAGNOSTIC] package.json exists: True
+[2026-07-27 23:38:48.116] [DIAGNOSTIC] node_modules exists: True
+[2026-07-27 23:38:48.116] [DIAGNOSTIC] ========================================
+[2026-07-27 23:38:48.122] [INFO] Package name: kazi-tracker
+[2026-07-27 23:38:48.123] [INFO] Package version: 1.0.0
+[2026-07-27 23:38:48.127] [DIAGNOSTIC] Available npm scripts: dev, build, lint, preview, functions:build, test:rules, import:tasks, fix:kirwa-profile
+
+[2026-07-27 23:38:48.132] [SECTION] ================================================
+[2026-07-27 23:38:48.133] [SECTION] STARTING: LINT VALIDATION
+[2026-07-27 23:38:48.133] [SECTION] COMMAND: npm run lint
+[2026-07-27 23:38:48.133] [SECTION] DIRECTORY: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:48.134] [SECTION] ================================================
+[2026-07-27 23:38:48.461] [OUTPUT] > kazi-tracker@1.0.0 lint
+[2026-07-27 23:38:48.462] [OUTPUT] > eslint .
+[2026-07-27 23:38:49.690] [INFO] LINT VALIDATION duration: 1.55 seconds
+[2026-07-27 23:38:49.691] [INFO] LINT VALIDATION exit code: 0
+[2026-07-27 23:38:49.694] [SUCCESS] LINT VALIDATION completed successfully.
+
+[2026-07-27 23:38:49.695] [SECTION] ================================================
+[2026-07-27 23:38:49.695] [SECTION] STARTING: PRODUCTION BUILD
+[2026-07-27 23:38:49.695] [SECTION] COMMAND: npm run build
+[2026-07-27 23:38:49.696] [SECTION] DIRECTORY: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 23:38:49.696] [SECTION] ================================================
+[2026-07-27 23:38:50.026] [OUTPUT] > kazi-tracker@1.0.0 build
+[2026-07-27 23:38:50.026] [OUTPUT] > tsc -b && vite build
+[2026-07-27 23:38:52.330] [OUTPUT] vite v7.3.6 building client environment for production...
+[2026-07-27 23:38:52.558] [OUTPUT] transforming...
+[2026-07-27 23:38:55.165] [OUTPUT] Γ£ô 2043 modules transformed.
+[2026-07-27 23:38:55.452] [OUTPUT] rendering chunks...
+[2026-07-27 23:38:55.461] [OUTPUT] computing gzip size...
+[2026-07-27 23:38:55.482] [OUTPUT] dist/index.html                     1.02 kB Γöé gzip:   0.46 kB
+[2026-07-27 23:38:55.483] [OUTPUT] dist/assets/index-C217f4-g.css     46.19 kB Γöé gzip:  10.82 kB
+[2026-07-27 23:38:55.483] [OUTPUT] dist/assets/index-Bb0UoJrA.js   1,054.20 kB Γöé gzip: 328.13 kB
+
+[2026-07-27 23:38:55.484] [OUTPUT] (!) Some chunks are larger than 500 kB after minification. Consider:
+[2026-07-27 23:38:55.484] [OUTPUT] - Using dynamic import() to code-split the application
+[2026-07-27 23:38:55.484] [OUTPUT] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[2026-07-27 23:38:55.484] [OUTPUT] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[2026-07-27 23:38:55.484] [OUTPUT] Γ£ô built in 3.15s
+[2026-07-27 23:38:55.591] [INFO] PRODUCTION BUILD duration: 5.89 seconds
+[2026-07-27 23:38:55.591] [INFO] PRODUCTION BUILD exit code: 0
+[2026-07-27 23:38:55.592] [SUCCESS] PRODUCTION BUILD completed successfully.
+
+[2026-07-27 23:38:55.592] [SUCCESS] ================================================
+[2026-07-27 23:38:55.592] [SUCCESS] KAZI TRACKER PIPELINE COMPLETED SUCCESSFULLY
+[2026-07-27 23:38:55.592] [SUCCESS] LINT STATUS: PASSED
+[2026-07-27 23:38:55.592] [SUCCESS] BUILD STATUS: PASSED
+[2026-07-27 23:38:55.592] [SUCCESS] ================================================
+[2026-07-27 23:38:55.592] [SUCCESS] Lint validation and production build completed successfully.

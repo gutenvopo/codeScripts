@@ -12,6 +12,7 @@ import pyperclip
 from qbsearch.core.magnet_resolver import MagnetResolver
 from qbsearch.core.result_model import SearchResult, filter_results, sort_results
 from qbsearch.ui import theme
+from qbsearch.ui.log_window import VerboseLogWindow
 from qbsearch.ui.toast import Toast
 from qbsearch.utils import human_size
 
@@ -28,6 +29,7 @@ class ResultsTable(ctk.CTkFrame):
         super().__init__(master, fg_color=theme.BG, corner_radius=0)
         self.on_add = on_add
         self.magnet_resolver = magnet_resolver
+        self.log_window: VerboseLogWindow | None = None
         self.results: list[SearchResult] = []
         self.visible: list[SearchResult] = []
         self.sort_key = "seeders"
@@ -155,16 +157,25 @@ class ResultsTable(ctk.CTkFrame):
             self.copy_result_link(rows[0])
 
     def copy_result_link(self, result: SearchResult) -> None:
+        self._open_verbose_log(result)
+        log.info("Starting magnet-link request for %s", result.name)
         state, value = self.magnet_resolver.prepare(result)
         if state == "ready" and value:
+            log.info("Resolver returned a direct or cached link; no page fetch is needed")
             self._copy_to_clipboard(value)
             return
         if state == "inflight":
+            log.warning("A request for this detail page is already running")
             return
         if state != "fetch" or not value:
-            log.warning("could not resolve magnet target for result %s", result.name)
+            log.error(
+                "No magnet URI, torrent URL, or usable HTTP detail page was supplied for %s",
+                result.name,
+            )
+            self._finish_verbose_log(False)
             Toast.error(self, "Could not extract magnet from detail page")
             return
+        log.info("Starting a background detail-page lookup")
         info = Toast.info(self, "Fetching magnet link…")
         thread = threading.Thread(
             target=self._resolve_and_copy_worker,
@@ -191,23 +202,38 @@ class ResultsTable(ctk.CTkFrame):
     ) -> None:
         info_toast.dismiss()
         if not magnet:
-            log.warning(
-                "could not extract magnet from detail page %s for %s",
-                detail_url,
+            log.error(
+                "Magnet extraction failed for %s using detail page %s",
                 result.name,
+                detail_url,
             )
+            self._finish_verbose_log(False)
             Toast.error(self, "Could not extract magnet from detail page")
             return
         self._copy_to_clipboard(magnet)
 
     def _copy_to_clipboard(self, value: str) -> None:
+        log.info("Step 4/4: Copying the resolved link to the Windows clipboard")
         try:
             pyperclip.copy(value)
-        except Exception:
+        except Exception:  # noqa: BLE001
             log.exception("failed to copy magnet link")
+            self._finish_verbose_log(False)
             Toast.error(self, "Failed to copy — see log")
             return
+        log.info("Magnet link copied successfully")
+        self._finish_verbose_log(True)
         Toast.success(self, "Magnet link copied")
+
+    def _open_verbose_log(self, result: SearchResult) -> None:
+        if self.log_window is None or not self.log_window.is_open():
+            self.log_window = VerboseLogWindow(self)
+            self.log_window.attach()
+        self.log_window.start_session(result.name, result.engine)
+
+    def _finish_verbose_log(self, success: bool) -> None:
+        if self.log_window and self.log_window.is_open():
+            self.log_window.finish(success)
 
     def focus_filter(self) -> None:
         self.filter_entry.focus_set()

@@ -4,7 +4,82 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Give every Kazi Tracker Error Log record its own Copy entry button with
+  entry-specific success feedback. [kazi-tracker/src/pages/ErrorLogPage.tsx,
+  kazi-tracker/src/styles/index.css]
+- Normalize Kazi Tracker browser geolocation failures into readable
+  `GeolocationError` records with permission, unavailable, and timeout
+  messages, while preserving non-enumerable error properties and diagnostic
+  codes in the local Error Log. [kazi-tracker/src/hooks/useWeather.ts,
+  kazi-tracker/src/lib/errorLog.ts]
+- Align Maintenant's dark interface and logo presentation with its navy-blue
+  and orange industrial brand identity. [maintenant/src/]
+
 ### Added
+- Add a browser-local, redacted Error Log tab to Kazi Tracker with verbose
+  timestamps, sources, routes, messages, stack traces, diagnostic details,
+  copy/clear controls, and capture for global, promise, React, resource,
+  console, Firebase, weather, profile, and authentication failures.
+  [kazi-tracker/src/lib/errorLog.ts,
+  kazi-tracker/src/components/AppErrorBoundary.tsx,
+  kazi-tracker/src/pages/ErrorLogPage.tsx, kazi-tracker/src/App.tsx,
+  kazi-tracker/src/main.tsx, kazi-tracker/src/styles/index.css,
+  kazi-tracker/README.md]
+- Add a thread-safe, live verbose activity window to qbSearch magnet-link
+  requests, covering direct/cache decisions, detail-page fetches, redirects,
+  HTTP status and reason, response metadata, extraction failures, network
+  exceptions, and clipboard completion while redacting URL query strings.
+  [qbsearch/src/qbsearch/core/magnet_resolver.py,
+  qbsearch/src/qbsearch/ui/results_table.py,
+  qbsearch/src/qbsearch/ui/log_window.py, qbsearch/tests/]
+- Add a colourful, fillable 12-week Kalenjin language teacher guide with all
+  source lessons, auto-saving translation fields, lesson checklists, progress
+  tracking, search, assessments, translator notes, print support, JSON
+  backup/restore, responsive layouts, and Firebase Hosting configuration.
+  [kalenjin-learning-guide/]
+- Add bottom-corner Shopping and Task quick actions to Kazi Tracker. Shopping
+  opens the active medium Shopping parent directly in subtask-entry mode,
+  creating that parent on demand when absent, while Task opens the standard
+  new-task dialog. [kazi-tracker/src/pages/TasksPage.tsx,
+  kazi-tracker/src/components/AddTaskModal.tsx,
+  kazi-tracker/src/hooks/useTasks.ts, kazi-tracker/src/styles/index.css]
+- Remember each signed-in Kazi Tracker user's chosen forecast location in
+  device-local browser storage, reuse it on later logins without prompting
+  again, and request browser geolocation only after an explicit user action.
+  [kazi-tracker/src/lib/locationPreference.ts,
+  kazi-tracker/src/hooks/useWeather.ts,
+  kazi-tracker/src/components/WeatherWidget.tsx,
+  kazi-tracker/src/pages/TasksPage.tsx, kazi-tracker/README.md]
+- Add the Maintenant industrial maintenance web app with protected Supabase
+  authentication, facility navigation, Pump House readings persistence,
+  database/RLS setup, and Vercel deployment documentation. [maintenant/]
+- Add a Kazi Tracker TODO note for making Shopping easier to reach, easier to
+  extend with subtasks, and persistent by default on starting lists.
+  [kazi-tracker/TODO.md]
+- Add a regular-task edit-modal shortcut for creating subtasks with a default
+  23:59 Nairobi deadline, hidden from subtasks and step-task editors.
+  [kazi-tracker/src/components/AddTaskModal.tsx,
+  kazi-tracker/src/hooks/useTasks.ts, kazi-tracker/src/pages/TasksPage.tsx,
+  kazi-tracker/src/styles/index.css]
+- Add separate Kazi Tracker step-task checklists embedded in main tasks, with
+  card-level completion indicators, click-to-open checklist dialogs,
+  checkboxes, numbered drag-and-drop ordering, and full add/edit/remove
+  controls in the task editor. Main-task completion now
+  requires both subtasks and step tasks to be complete, and recurring nightly
+  resets clear step completion for the next Nairobi day.
+  [kazi-tracker/src/components/StepTaskBoard.tsx,
+  kazi-tracker/src/components/StepTasksDialog.tsx,
+  kazi-tracker/src/lib/stepTasks.ts, kazi-tracker/src/hooks/useTasks.ts,
+  kazi-tracker/functions/src/, kazi-tracker/firestore.rules]
+- Add Kazi Tracker daily recurring tasks with create/edit controls, visible
+  task badges, schema-aware Firestore validation, Nairobi-time nightly resets,
+  and daily-report late counts/lists captured before recurring completion and
+  deadlines reset for the next day. Preserve that pre-reset report across
+  scheduler retries while unfinished task rollovers continue safely.
+  [kazi-tracker/src/, kazi-tracker/functions/src/,
+  kazi-tracker/firestore.rules, kazi-tracker/test/,
+  kazi-tracker/functions/test/, kazi-tracker/README.md]
 - Add Kazi Tracker security hardening with schema-aware, default-deny Firestore
   rules; emulator owner-isolation tests; reCAPTCHA Enterprise App Check;
   bounded listeners; generic authentication failures; stronger signup
@@ -60,6 +135,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a TLS warning path that records suspected HTTPS inspection on Seedr certificate chains and surfaces it in Settings > SSL & Network. [seedrfetch/core/ssl_setup.py, seedrfetch/ui/settings_view.py]
 
 ### Changed
+- Give Kazi Tracker's Shopping and Task floating actions a glossy glass finish
+  with translucent color layers, blurred backdrops, reflective highlights, and
+  polished depth shadows. [kazi-tracker/src/styles/index.css]
+- Simplify Kazi Tracker step tasks into one numbered, draggable checklist
+  without High, Medium, or Low categories.
+  [kazi-tracker/src/components/StepTaskBoard.tsx,
+  kazi-tracker/src/lib/stepTasks.ts]
+- Sort Kazi Tracker's parent-task selector alphabetically by task title in the
+  new-task and edit-task forms.
+  [kazi-tracker/src/components/AddTaskModal.tsx]
 - Make Kazi Tracker App Check initialization optional: an absent or blank
   reCAPTCHA Enterprise site key now logs a warning and leaves the app usable
   instead of crashing during startup.

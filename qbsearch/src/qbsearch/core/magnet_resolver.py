@@ -15,7 +15,8 @@ from qbsearch.core.result_model import SearchResult
 log = logging.getLogger(__name__)
 
 MAGNET_RE = re.compile(
-    r"magnet:\?xt=urn:btih:[A-Za-z0-9]+(?:&[^\s\"'<>]*)?",
+    # match a magnet URI and allow an arbitrary query string after the infohash
+    r"magnet:\?xt=urn:btih:[A-Za-z0-9%]+(?:[^\s\"'<>]*)?",
     re.IGNORECASE,
 )
 
@@ -60,46 +61,73 @@ class MagnetResolver:
         self._lock = threading.Lock()
 
     def prepare(self, result: SearchResult) -> tuple[ResolveState, str | None]:
+        log.info("Step 1/4: Inspecting the search result for a downloadable link")
         direct = self._direct_url(result)
         if direct:
+            log.info("The search engine supplied a direct %s", _target_kind(direct))
             return "ready", direct
         detail_url = self.detail_url(result)
         if not detail_url:
+            log.error("The result contains no usable HTTP or HTTPS detail-page URL")
             return "missing", None
+        log.debug("Detail page selected: %s", _safe_url(detail_url))
         with self._lock:
             cached = self.cache.get(detail_url)
             if cached:
-                log.debug("magnet resolver cache hit for %s", detail_url)
+                log.info("A previously resolved magnet was found in the in-memory cache")
                 return "ready", cached
             if detail_url in self.in_flight:
+                log.warning("The same detail page is already being requested")
                 return "inflight", detail_url
             self.in_flight.add(detail_url)
         return "fetch", detail_url
 
     def resolve_detail(self, detail_url: str, prefer_name: str | None = None) -> str | None:
+        safe_url = _safe_url(detail_url)
+        log.info("Step 2/4: Requesting the search engine detail page")
+        log.debug("GET %s (timeout=10s, redirects=enabled)", safe_url)
         try:
-            response = self.session.get(detail_url, timeout=10, allow_redirects=True)
-        except requests.RequestException as exc:
-            log.warning("failed to fetch magnet detail page %s: %s", detail_url, exc)
-            return None
-        try:
-            if response.status_code != 200:
-                log.warning(
-                    "magnet detail page returned HTTP %s for %s",
-                    response.status_code,
-                    detail_url,
+            try:
+                response = self.session.get(detail_url, timeout=10, allow_redirects=True)
+            except requests.RequestException as exc:
+                log.error(
+                    "Network request failed before an HTTP response was received: %s: %s",
+                    type(exc).__name__,
+                    exc,
                 )
                 return None
+            reason = getattr(response, "reason", "") or "no reason phrase"
+            log.info("Response received: HTTP %s %s", response.status_code, reason)
+            final_url = getattr(response, "url", detail_url)
+            if final_url != detail_url:
+                log.debug("Redirected to: %s", _safe_url(final_url))
+            headers = getattr(response, "headers", {})
+            content_type = headers.get("Content-Type", "unknown") if headers else "unknown"
+            log.debug(
+                "Response content: %s; %s characters",
+                content_type,
+                len(response.text),
+            )
+            if response.status_code != 200:
+                log.error(
+                    "Cannot scan this page because the server returned HTTP %s %s",
+                    response.status_code,
+                    reason,
+                )
+                return None
+            log.info("Step 3/4: Scanning the returned HTML for magnet URIs")
             magnet = extract_magnet(response.text, prefer_name)
             if not magnet:
-                log.warning("magnet not found on detail page %s", detail_url)
+                log.error("The page loaded successfully, but no magnet URI was found in its HTML")
                 return None
+            log.info("Magnet found: %s", _magnet_summary(magnet))
             with self._lock:
                 self.cache[detail_url] = magnet
             return magnet
         finally:
             with self._lock:
                 self.in_flight.discard(detail_url)
+            log.debug("Detail-page request marked as finished")
 
     def detail_url(self, result: SearchResult) -> str:
         candidate = result.file_url.strip() or result.description_url.strip()
@@ -119,6 +147,28 @@ class MagnetResolver:
             return file_url
         parsed = urlparse(file_url)
         if parsed.scheme.lower() in {"http", "https"} and parsed.path.lower().endswith(".torrent"):
-            log.debug("using direct .torrent URL as copy target: %s", file_url)
             return file_url
         return ""
+
+
+def _safe_url(value: str) -> str:
+    parsed = urlparse(value)
+    path = parsed.path or "/"
+    query_note = "?<query redacted>" if parsed.query else ""
+    return f"{parsed.scheme}://{parsed.netloc}{path}{query_note}"
+
+
+def _target_kind(value: str) -> str:
+    return "magnet URI" if value.lower().startswith("magnet:?") else ".torrent URL"
+
+
+def _magnet_summary(value: str) -> str:
+    query = parse_qs(urlparse(value).query)
+    info_hash = query.get("xt", ["unknown"])[0].rsplit(":", 1)[-1]
+    display_name = query.get("dn", ["not supplied"])[0]
+    tracker_count = len(query.get("tr", []))
+    short_hash = f"{info_hash[:12]}…" if len(info_hash) > 12 else info_hash
+    return (
+        f"info hash {short_hash}; name {display_name!r}; "
+        f"{tracker_count} tracker{'s' if tracker_count != 1 else ''}"
+    )

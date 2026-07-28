@@ -1,10 +1,10 @@
 # Kazi Tracker
 
 Kazi Tracker is a responsive, dark-mode task manager built with React,
-TypeScript, Tailwind CSS, and Firebase. It supports nested tasks, priority-aware
-drag and drop, deadlines, completion celebrations, local weather, Firebase
-Authentication, nightly summaries, and a Firestore schema shared cleanly with
-future Android and iOS clients.
+TypeScript, Tailwind CSS, and Firebase. It supports nested tasks, private
+step-task checklists, priority-aware drag and drop, deadlines, completion
+celebrations, local weather, Firebase Authentication, nightly summaries, and a
+Firestore schema shared cleanly with future Android and iOS clients.
 
 ## Local setup
 
@@ -76,7 +76,21 @@ firebase deploy --only functions:generateNightlySummaries
 ```
 
 `firebase.json` serves `dist` and rewrites unknown routes to `index.html`, so
-`/summary` works when opened directly.
+`/summary` and `/errors` work when opened directly.
+
+## Error Log
+
+The authenticated app includes an **Error Log** tab beside Tasks and Summary.
+It captures verbose diagnostics for global JavaScript errors, unhandled promise
+rejections, React render failures, resource-load failures, `console.error`
+calls, and handled task, summary, weather, profile, and authentication errors.
+Each entry includes its timestamp, source, route, message, stack trace, and
+available diagnostic details.
+
+The newest 200 entries are stored only in that browser's local storage until
+cleared. Passwords, authorization values, tokens, secrets, credentials, and API
+keys are redacted before an entry is retained. The log can be copied as JSON
+for troubleshooting or cleared from the tab.
 
 ## One-time task import
 
@@ -137,7 +151,16 @@ timestamp fields and ISO 8601 strings for deadlines.
   completedAt: Timestamp | null,
   createdAt: Timestamp,
   date: string,                  // YYYY-MM-DD in the user's active day
-  parentId: string | null        // another task ID; null means top-level
+  parentId: string | null,       // another task ID; null means top-level
+  recurring: boolean,            // true for a task that resets every Nairobi day
+  steps: [
+    {
+      id: string,
+      title: string,
+      order: number,
+      completed: boolean
+    }
+  ]
 }
 ```
 
@@ -145,6 +168,13 @@ Tasks remain ordinary documents—there are no React-specific fields. A phone
 app can query the current `date`, sort by `order`, and connect children using
 `parentId`. Task IDs are duplicated in `id` for convenient serialization and
 cross-platform model parity.
+
+Step tasks are distinct from parent/child subtasks and are embedded in their
+main task document. The task card shows only a step count; selecting the card
+opens the interactive checklist. Steps use one numbered drag-and-drop order. A
+main task cannot be completed while either a child subtask or an embedded step
+remains incomplete. Existing documents without `steps` are treated as having
+an empty checklist.
 
 ### `users/{uid}/profile/main`
 
@@ -177,6 +207,15 @@ account metadata.
   completedList: [
     { title: string, priority: "high" | "medium" | "low", completedAt: Timestamp | null }
   ],
+  lateTasks: number,
+  lateList: [
+    {
+      title: string,
+      priority: "high" | "medium" | "low",
+      deadline: string,
+      recurring: boolean
+    }
+  ],
   generatedAt: Timestamp
 }
 ```
@@ -191,9 +230,15 @@ required by the UI.
 `generateNightlySummaries` runs at `00:05` in `Africa/Nairobi`. It:
 
 1. Summarizes the previous Nairobi calendar day for every Firebase Auth user.
-2. Writes or replaces that day's summary document.
-3. Rolls incomplete tasks forward by changing their `date` to the new day.
-4. Archives and removes completed tasks when `ARCHIVE_COMPLETED_TASKS` is true.
+2. Writes that day's summary once, preserving the pre-reset snapshot during
+   scheduler retries.
+3. Records incomplete tasks whose deadline passed, plus tasks completed after
+   their deadline, in the report's late count and list.
+4. Resets every recurring task for the new day, preserving its deadline time,
+   priority, and order while clearing both task and step-task completion state.
+5. Rolls incomplete non-recurring tasks forward by changing their `date`.
+6. Archives and removes completed non-recurring tasks when
+   `ARCHIVE_COMPLETED_TASKS` is true.
 
 Archival defaults to true. To retain completed task documents instead, set the
 Cloud Functions parameter during deployment when prompted:
@@ -202,16 +247,23 @@ Cloud Functions parameter during deployment when prompted:
 ARCHIVE_COMPLETED_TASKS=false
 ```
 
-With archival disabled, completed documents remain on their original date and
-therefore do not appear in the new day's task query. Summary generation is
-idempotent: rerunning it replaces the same summary document.
+With archival disabled, completed non-recurring documents remain on their
+original date and therefore do not appear in the new day's task query.
+Recurring tasks are never archived by this function. Summary generation and
+task rollover are retry-safe: rerunning preserves the first pre-reset report
+and finishes processing any task documents that remain on the previous day.
 
 ## Weather and location privacy
 
-The browser asks for location only to request a local Open-Meteo forecast.
-Coordinates are sent to Open-Meteo and BigDataCloud for forecast and reverse
-geocoding; they are not written to Firebase. If permission is denied, the user
-can search for a city manually through Open-Meteo's geocoding API.
+The browser asks for location only after the signed-in user selects **Use
+current location**. The browser remains the authority for granting or denying
+that permission. After a current or manually searched location is chosen, Kazi
+Tracker remembers the forecast location for that account in this browser so it
+does not ask again on every login. Stored coordinates are rounded to three
+decimal places, kept in browser local storage under the account UID, and never
+written to Firebase. Coordinates are sent to Open-Meteo and BigDataCloud for
+forecast and reverse geocoding. The user can select **Change location** at any
+time or search for a city manually through Open-Meteo's geocoding API.
 
 ## Security
 

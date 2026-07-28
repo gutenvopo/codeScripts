@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A colourful, fillable 12-week Kalenjin language teacher guide."
+    />
+    <meta name="theme-color" content="#163d38" />
+    <title>Kalenjin Learning Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">K</span>
+          <div>
+            <strong>Kalenjin</strong>
+            <span>Teacher Guide</span>
+          </div>
+        </div>
+
+        <div class="course-progress" aria-labelledby="course-progress-title">
+          <div class="progress-heading">
+            <span id="course-progress-title">Course progress</span>
+            <strong id="course-percent">0%</strong>
+          </div>
+          <div
+            class="progress-track"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            id="course-progress-bar"
+          >
+            <span></span>
+          </div>
+          <p id="course-progress-copy">Start by adding your first translation.</p>
+        </div>
+
+        <nav class="week-nav" aria-label="Course weeks" id="week-nav"></nav>
+
+        <div class="sidebar-footer">
+          <button class="text-button" id="show-assessments" type="button">
+            Assessment plan
+          </button>
+          <button class="text-button" id="show-translator-notes" type="button">
+            Translator notes
+          </button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button
+            class="icon-button menu-button"
+            id="menu-toggle"
+            type="button"
+            aria-label="Open course navigation"
+            aria-expanded="false"
+          >
+            <span></span><span></span><span></span>
+          </button>
+          <label class="search">
+            <span aria-hidden="true"></span>
+            <span class="sr-only">Search the guide</span>
+            <input
+              type="search"
+              id="search-input"
+              placeholder="Search words, phrases, or topics"
+            />
+          </label>
+          <div class="top-actions">
+            <span class="save-status" id="save-status" aria-live="polite">
+              Saved on this device
+            </span>
+            <button class="button button-secondary" id="backup-button" type="button">
+              Back up
+            </button>
+            <button class="button button-primary" id="print-button" type="button">
+              Print guide
+            </button>
+          </div>
+        </header>
+
+        <div id="search-results" class="search-results" hidden></div>
+        <div id="lesson-content" tabindex="-1"></div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="modal-backdrop" hidden>
+      <section
+        class="modal"
+        id="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">
+          ×
+        </button>
+        <div id="modal-body"></div>
+      </section>
+    </div>
+
+    <input type="file" id="restore-input" accept="application/json" hidden />
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

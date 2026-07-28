@@ -10,6 +10,8 @@ qbSearch is a polished Windows desktop front-end for qBittorrent's installed sea
 - Regex mode with client-side filtering.
 - Sortable, filterable dark results table.
 - Copy, open, and send results back to qBittorrent.
+- A live magnet-link activity window showing each resolution step, HTTP status
+  or network failure, HTML scanning result, and clipboard outcome.
 - Password storage through Windows keyring.
 - Rotating logs under `%LOCALAPPDATA%\qbsearch\logs\`.
 

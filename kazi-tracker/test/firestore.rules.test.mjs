@@ -34,6 +34,8 @@ function taskData(id, overrides = {}) {
     createdAt: Timestamp.now(),
     date: "2026-07-04",
     parentId: null,
+    recurring: false,
+    steps: [],
     ...overrides,
   };
 }
@@ -122,6 +124,34 @@ describe("schema validation and server-owned data", () => {
         doc(db, "users", aliceUid, "tasks", "extra-field"),
         taskData("extra-field", { secret: "not allowed" }),
       ),
+    );
+    await assertFails(
+      setDoc(
+        doc(db, "users", aliceUid, "tasks", "bad-recurring"),
+        taskData("bad-recurring", { recurring: "daily" }),
+      ),
+    );
+    await assertFails(
+      setDoc(
+        doc(db, "users", aliceUid, "tasks", "bad-steps"),
+        taskData("bad-steps", { steps: "not-a-list" }),
+      ),
+    );
+  });
+
+  test("recurring is persisted as a boolean while legacy tasks remain valid", async () => {
+    const db = testEnvironment.authenticatedContext(aliceUid).firestore();
+    await assertSucceeds(
+      setDoc(
+        doc(db, "users", aliceUid, "tasks", "recurring"),
+        taskData("recurring", { recurring: true }),
+      ),
+    );
+    const legacy = taskData("legacy");
+    delete legacy.recurring;
+    delete legacy.steps;
+    await assertSucceeds(
+      setDoc(doc(db, "users", aliceUid, "tasks", "legacy"), legacy),
     );
   });
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { motion } from "framer-motion";
-import { CalendarDays, Check, ClipboardList } from "lucide-react";
+import { AlertTriangle, CalendarDays, Check, ClipboardList, Repeat2 } from "lucide-react";
 import { db } from "../lib/firebase";
+import { reportAppError } from "../lib/errorLog";
 import type { DailySummary, Priority } from "../types/task";
 import { PriorityBadge } from "../components/PriorityBadge";
 
@@ -57,6 +58,7 @@ export function SummaryPage({ uid }: { uid: string }) {
         setLoading(false);
       },
       (caught) => {
+        reportAppError(caught, "Summary subscription");
         setError(caught.message);
         setLoading(false);
       },
@@ -117,6 +119,26 @@ export function SummaryPage({ uid }: { uid: string }) {
                   <div key={`${task.title}-${taskIndex}`}>
                     <Check size={14} />
                     <span>{task.title}</span>
+                    <PriorityBadge priority={task.priority} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {(summary.lateList?.length ?? 0) > 0 && (
+              <div className="late-list">
+                <h3>
+                  <AlertTriangle size={13} />
+                  Late ({summary.lateTasks ?? summary.lateList?.length ?? 0})
+                </h3>
+                {summary.lateList?.map((task, taskIndex) => (
+                  <div key={`${task.title}-${taskIndex}`}>
+                    <span>{task.title}</span>
+                    {task.recurring && (
+                      <span className="summary-recurring">
+                        <Repeat2 size={12} />
+                        Recurring
+                      </span>
+                    )}
                     <PriorityBadge priority={task.priority} />
                   </div>
                 ))}

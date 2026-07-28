@@ -4,7 +4,13 @@ import type {
   DraggableSyntheticListeners,
 } from "@dnd-kit/core";
 import { motion } from "framer-motion";
-import { Clock3, GripVertical, Pencil } from "lucide-react";
+import {
+  Clock3,
+  GripVertical,
+  ListChecks,
+  Pencil,
+  Repeat2,
+} from "lucide-react";
 import type { Task } from "../types/task";
 import { ConfettiBurst } from "./ConfettiBurst";
 import { PriorityBadge } from "./PriorityBadge";
@@ -21,6 +27,7 @@ interface TaskItemProps {
   celebrating?: boolean;
   onEdit: (task: Task) => void;
   onComplete: (taskId: string, completed: boolean) => Promise<void>;
+  onOpenSteps?: (task: Task) => void;
 }
 
 function deadlineLabel(deadline: string): string {
@@ -38,12 +45,16 @@ export function TaskItem({
   celebrating = false,
   onEdit,
   onComplete,
+  onOpenSteps,
 }: TaskItemProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [burst, setBurst] = useState(0);
   const [origin, setOrigin] = useState({ x: 0.5, y: 0.5 });
   const overdue =
     Boolean(task.deadline) && !task.completed && new Date(task.deadline!).getTime() < Date.now();
+  const steps = task.steps ?? [];
+  const incompleteSteps = steps.filter((step) => !step.completed).length;
+  const opensSteps = steps.length > 0 && onOpenSteps !== undefined;
 
   useEffect(() => {
     if (!celebrating) return;
@@ -77,9 +88,24 @@ export function TaskItem({
             : { x: 0, scale: 1 }
         }
         transition={{ duration: 0.42 }}
-        className={`task-card task-${task.priority} ${overdue ? "task-overdue" : ""} ${
+        className={`task-card task-${task.priority} ${opensSteps ? "task-has-steps" : ""} ${
+          overdue ? "task-overdue" : ""
+        } ${
           task.completed ? "task-completed" : ""
         }`}
+        role={opensSteps ? "button" : undefined}
+        tabIndex={opensSteps ? 0 : undefined}
+        onClick={() => opensSteps && onOpenSteps(task)}
+        onKeyDown={(event) => {
+          if (
+            event.target === event.currentTarget &&
+            opensSteps &&
+            (event.key === "Enter" || event.key === " ")
+          ) {
+            event.preventDefault();
+            onOpenSteps(task);
+          }
+        }}
       >
         {dragHandle && (
           <button
@@ -88,6 +114,7 @@ export function TaskItem({
             {...dragHandle.attributes}
             {...dragHandle.listeners}
             aria-label={`Drag ${task.title}`}
+            onClick={(event) => event.stopPropagation()}
           >
             <GripVertical size={17} />
           </button>
@@ -97,14 +124,21 @@ export function TaskItem({
           className={`task-checkbox ${celebrating || task.completed ? "checked" : ""}`}
           aria-label={
             completionLocked
-              ? "Complete all sub-tasks first"
+              ? "Complete all sub-tasks and step tasks first"
               : task.completed
                 ? "Mark task incomplete"
                 : "Mark task complete"
           }
-          title={completionLocked ? "Complete all sub-tasks first" : undefined}
+          title={
+            completionLocked
+              ? "Complete all sub-tasks and step tasks first"
+              : undefined
+          }
           disabled={completionLocked}
-          onClick={() => void handleToggle()}
+          onClick={(event) => {
+            event.stopPropagation();
+            void handleToggle();
+          }}
         >
           <span />
         </button>
@@ -114,6 +148,19 @@ export function TaskItem({
             <PriorityBadge priority={task.priority} />
           </div>
           <div className="task-meta">
+            {task.recurring && (
+              <span className="recurring-label">
+                <Repeat2 size={13} />
+                Recurring
+              </span>
+            )}
+            {steps.length > 0 && (
+              <span className="step-count-label">
+                <ListChecks size={13} />
+                {steps.length} {steps.length === 1 ? "step" : "steps"}
+                {incompleteSteps > 0 ? ` · ${incompleteSteps} remaining` : " · complete"}
+              </span>
+            )}
             {task.deadline && (
               <span className={overdue ? "overdue-label" : ""}>
                 <Clock3 size={13} />
@@ -127,7 +174,10 @@ export function TaskItem({
         <button
           type="button"
           className="icon-button"
-          onClick={() => onEdit(task)}
+          onClick={(event) => {
+            event.stopPropagation();
+            onEdit(task);
+          }}
           aria-label={`Edit ${task.title}`}
         >
           <Pencil size={16} />

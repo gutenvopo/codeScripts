@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Chrome, Sparkles } from "lucide-react";
 import kaziIcon from "../../assets/icon/kazi-icon.svg";
+import { reportAppError } from "../lib/errorLog";
 
 interface LoginScreenProps {
   onGoogle: () => Promise<void>;
@@ -56,6 +57,7 @@ export function LoginScreen({ onGoogle, onEmail, onRegister }: LoginScreenProps)
     try {
       await action();
     } catch (caught) {
+      reportAppError(caught, registering ? "Account registration" : "Authentication");
       setError(safeAuthenticationError(caught, registering));
     } finally {
       setBusy(false);

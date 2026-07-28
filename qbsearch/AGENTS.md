@@ -40,12 +40,15 @@ qbsearch/
 |   |-- core/regex_filter.py
 |   |-- core/result_model.py
 |   |-- core/search_controller.py
+|   |-- core/magnet_resolver.py
 |   `-- ui/
 |       |-- engine_panel.py
+|       |-- log_window.py
 |       |-- results_table.py
 |       |-- search_bar.py
 |       |-- settings_dialog.py
 |       |-- status_bar.py
+|       |-- toast.py
 |       `-- theme.py
 `-- tests/
 ```
@@ -64,11 +67,16 @@ qbsearch/
 - Worker events are marshalled through `queue.Queue`.
 - The UI drains at `after(100, drain)` and inserts table rows in batches.
 - Worker threads must never touch CTk or ttk widgets directly.
+- `VerboseLogHandler` only writes records into a thread-safe queue; the
+  `VerboseLogWindow` drains that queue with `after()` on the Tk thread.
 
 ## Known Constraints
 - qBittorrent search has no native regex support. Regex mode sends a broad token query to qBittorrent, then filters loaded results client-side.
 - Plugin behavior and result fields vary by provider. Treat missing sizes, URLs, seeders, and leechers as normal.
 - Some plugins put detail-page HTML URLs in `fileUrl` instead of real magnets. `core/magnet_resolver.py` resolves magnets on demand, caches successful detail-page lookups in memory, and tracks in-flight URLs so the UI never starts duplicate fetch threads.
+- Every magnet-link request opens a reusable verbose activity window. Resolver
+  logs include HTTP status and diagnostic metadata but redact detail-page query
+  strings because they may contain private tracker tokens.
 - Norton, VPN, and corporate TLS products can intercept HTTPS traffic. `truststore.inject_into_ssl()` must run on startup.
 - The app does not install plugins, modify qBittorrent plugin settings, download torrents directly, provide a web UI, or authenticate to anything other than qBittorrent itself.
 

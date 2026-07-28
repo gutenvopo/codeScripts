@@ -1,10 +1,35 @@
 import { BrowserRouter, NavLink, Navigate, Route, Routes } from "react-router-dom";
-import { BarChart3, ListTodo, LogOut } from "lucide-react";
+import { BarChart3, FileWarning, ListTodo, LogOut } from "lucide-react";
+import { useSyncExternalStore } from "react";
 import kaziIcon from "../assets/icon/kazi-icon.svg";
 import { LoginScreen } from "./components/LoginScreen";
 import { useAuth } from "./hooks/useAuth";
+import {
+  getErrorLogSnapshot,
+  subscribeToErrorLog,
+} from "./lib/errorLog";
+import { ErrorLogPage } from "./pages/ErrorLogPage";
 import { SummaryPage } from "./pages/SummaryPage";
 import { TasksPage } from "./pages/TasksPage";
+
+function ErrorLogNavLink() {
+  const entries = useSyncExternalStore(
+    subscribeToErrorLog,
+    getErrorLogSnapshot,
+    getErrorLogSnapshot,
+  );
+  return (
+    <NavLink to="/errors">
+      <FileWarning size={17} />
+      Error Log
+      {entries.length > 0 && (
+        <span className="error-count" aria-label={`${entries.length} captured errors`}>
+          {entries.length > 99 ? "99+" : entries.length}
+        </span>
+      )}
+    </NavLink>
+  );
+}
 
 export default function App() {
   const {
@@ -55,6 +80,7 @@ export default function App() {
               <BarChart3 size={17} />
               Summary
             </NavLink>
+            <ErrorLogNavLink />
           </nav>
           <div className="account">
             <span className="account-name">
@@ -76,6 +102,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<TasksPage uid={user.uid} profile={profile} />} />
             <Route path="/summary" element={<SummaryPage uid={user.uid} />} />
+            <Route path="/errors" element={<ErrorLogPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

@@ -139,4 +139,46 @@ completion rules are centralized in `kazi-tracker/src/lib/taskHierarchy.ts`;
 display numbering and reorder calculations live in
 `kazi-tracker/src/lib/taskOrdering.ts`. Structured, phone-readable account
 profiles live at `users/{uid}/profile/main`, and Nairobi calendar formatting is
-centralized in `kazi-tracker/src/lib/nairobiDate.ts`.
+centralized in `kazi-tracker/src/lib/nairobiDate.ts`. Daily recurring tasks keep
+their normal priority and are reset by the Nairobi nightly function only after
+that day's late-task report has been generated; pure deadline/reset helpers
+live in `kazi-tracker/functions/src/nightly.ts`. Main-task step checklists are
+embedded in the task document, remain separate from `parentId` subtasks, and
+use `kazi-tracker/src/components/StepTaskBoard.tsx` plus
+`kazi-tracker/src/lib/stepTasks.ts` for numbered drag ordering. A task can
+complete only when both its child subtasks and embedded step tasks are complete.
+Browser-side application failures are captured by
+`kazi-tracker/src/lib/errorLog.ts`, redacted, capped at 200 entries, retained
+only in local storage, and displayed through the authenticated `/errors` tab.
+
+## Sibling project: Maintenant
+
+`maintenant/` is an isolated React 19 + Vite + strict TypeScript industrial
+maintenance web app. It uses Tailwind CSS, React Router, Supabase email/password
+authentication, and a row-level-secured Postgres `readings` table. Frontend
+commands run from `maintenant/`: `npm run dev`, `npm run lint`, and
+`npm run build`. Environment, Supabase SQL, Vercel deployment, architecture,
+and verification instructions live in `maintenant/README.md` and
+`maintenant/AGENTS.md`.
+
+## Sibling project: Kalenjin Learning Guide
+
+`kalenjin-learning-guide/` is an isolated, dependency-free static web app for
+the 12-week Kalenjin language teacher guide. It includes fillable translation
+fields, device-local auto-save, lesson checklists, progress tracking, search,
+printing, assessments, translator notes, and JSON backup/restore. It is
+configured for Firebase Hosting with `kalenjin-learning-guide/firebase.json`.
+Preview it from that directory with `python -m http.server 4173`, and deploy it
+with `firebase deploy --only hosting` after selecting a Firebase project.
+
+## Sibling project: qbSearch
+
+`qbsearch/` is an isolated Python 3.13 CustomTkinter desktop front-end for
+qBittorrent search plugins and its Web API. Search polling and magnet
+detail-page resolution run in worker threads, while Tk updates are marshalled
+onto the UI thread. Magnet-link requests open a live verbose activity window
+whose logging handler writes only to a thread-safe queue; the window reports
+HTTP status and extraction failures while redacting detail-page query strings.
+Run its checks from `qbsearch/` with `.venv\Scripts\ruff.exe check .` and
+`.venv\Scripts\python.exe -m pytest -v`. Its full architecture and packaging
+rules live in `qbsearch/AGENTS.md`.

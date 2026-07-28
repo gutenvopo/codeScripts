@@ -8,6 +8,11 @@ import {
 } from "firebase-admin/firestore";
 import { defineBoolean } from "firebase-functions/params";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import {
+  deadlineForDate,
+  resetStepCompletion,
+  wasLate,
+} from "./nightly.js";
 
 initializeApp();
 
@@ -27,6 +32,10 @@ interface TaskData {
   priority: Priority;
   completed: boolean;
   completedAt: Timestamp | null;
+  deadline: string | null;
+  parentId: string | null;
+  recurring: boolean;
+  steps: DocumentData[];
 }
 
 function zonedDateKey(value: Date): string {
@@ -58,11 +67,28 @@ function toTask(data: DocumentData, id: string): TaskData {
     priority: isPriority(data.priority) ? data.priority : "low",
     completed: data.completed === true,
     completedAt: data.completedAt instanceof Timestamp ? data.completedAt : null,
+    deadline: typeof data.deadline === "string" ? data.deadline : null,
+    parentId: typeof data.parentId === "string" ? data.parentId : null,
+    recurring: data.recurring === true,
+    steps: Array.isArray(data.steps) ? data.steps : [],
   };
 }
 
-function buildSummary(tasks: TaskData[], date: string): DocumentData {
+function buildSummary(
+  tasks: TaskData[],
+  date: string,
+  nextDate: string,
+): DocumentData {
   const completed = tasks.filter((task) => task.completed);
+  const dayEnd = new Date(`${nextDate}T00:00:00+03:00`);
+  const late = tasks.filter((task) =>
+    wasLate(
+      task.deadline,
+      task.completed,
+      task.completedAt?.toDate() ?? null,
+      dayEnd,
+    ),
+  );
   const byPriority = Object.fromEntries(
     priorities.map((priority) => {
       const matching = tasks.filter((task) => task.priority === priority);
@@ -88,6 +114,13 @@ function buildSummary(tasks: TaskData[], date: string): DocumentData {
       priority,
       completedAt,
     })),
+    lateTasks: late.length,
+    lateList: late.map(({ title, priority, deadline, recurring }) => ({
+      title,
+      priority,
+      deadline,
+      recurring,
+    })),
     generatedAt: FieldValue.serverTimestamp(),
   };
 }
@@ -101,18 +134,46 @@ async function processUser(
     throw new Error("Refusing to process an invalid Firebase Authentication UID.");
   }
   const tasksReference = db.collection("users").doc(uid).collection("tasks");
-  const snapshot = await tasksReference.where("date", "==", summaryDate).get();
-  const tasks = snapshot.docs.map((item) => toTask(item.data(), item.id));
-  await db
+  const summaryReference = db
     .collection("users")
     .doc(uid)
     .collection("summaries")
-    .doc(summaryDate)
-    .set(buildSummary(tasks, summaryDate));
+    .doc(summaryDate);
+  const [snapshot, existingSummary] = await Promise.all([
+    tasksReference.where("date", "==", summaryDate).get(),
+    summaryReference.get(),
+  ]);
+  const tasks = snapshot.docs.map((item) => toTask(item.data(), item.id));
+  if (!existingSummary.exists) {
+    await summaryReference.set(buildSummary(tasks, summaryDate, nextDate));
+  }
 
   const writer = db.bulkWriter();
+  const archivedParentIds = new Set(
+    tasks
+      .filter((task) => task.completed && !task.recurring)
+      .map((task) => task.id),
+  );
   for (const item of snapshot.docs) {
     const task = toTask(item.data(), item.id);
+    if (task.recurring) {
+      let detachParent =
+        task.parentId !== null && archivedParentIds.has(task.parentId);
+      if (task.parentId && !tasks.some((candidate) => candidate.id === task.parentId)) {
+        const parentSnapshot = await tasksReference.doc(task.parentId).get();
+        detachParent =
+          !parentSnapshot.exists || parentSnapshot.data()?.date !== nextDate;
+      }
+      writer.update(item.ref, {
+        date: nextDate,
+        deadline: deadlineForDate(task.deadline, nextDate),
+        completed: false,
+        completedAt: null,
+        steps: resetStepCompletion(task.steps),
+        ...(detachParent ? { parentId: null } : {}),
+      });
+      continue;
+    }
     if (!task.completed) {
       writer.update(item.ref, { date: nextDate });
       continue;

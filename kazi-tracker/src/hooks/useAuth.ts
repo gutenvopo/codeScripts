@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
+import { reportAppError } from "../lib/errorLog";
 import type { UserProfile } from "../types/profile";
 
 const PASSWORD_MIN_LENGTH = 12;
@@ -38,7 +39,8 @@ export function useAuth() {
         if (active && auth.currentUser?.uid === nextUser.uid) {
           setProfile(nextProfile);
         }
-      }).catch(() => {
+      }).catch((caught: unknown) => {
+        reportAppError(caught, "User profile load");
         if (active && auth.currentUser?.uid === nextUser.uid) {
           setProfile(null);
         }

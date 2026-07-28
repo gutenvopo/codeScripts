@@ -1,0 +1,93 @@
+[2026-07-28 10:47:41.001] [SYSTEM] Kazi Tracker automated pipeline initialized.
+[2026-07-28 10:47:41.019] [INFO] Project directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:41.024] [INFO] Full diagnostic log: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\build-logs\kazi-build_2026-07-28_10-47-40.log
+[2026-07-28 10:47:41.037] [INFO] The pipeline will lint, build, then deploy Firebase Hosting.
+[2026-07-28 10:47:42.166] [SYSTEM] Beginning Kazi Tracker pipeline validation.
+[2026-07-28 10:47:42.167] [INFO] Expected project path: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:42.174] [INFO] Changing directory using: cd C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:42.183] [SUCCESS] Successfully entered the project directory.
+[2026-07-28 10:47:42.187] [INFO] Resolved working directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:42.236] [DIAGNOSTIC] ========== SYSTEM DIAGNOSTICS ==========
+[2026-07-28 10:47:42.240] [DIAGNOSTIC] Operating system: Microsoft Windows NT 10.0.26200.0
+[2026-07-28 10:47:42.240] [DIAGNOSTIC] Machine name: RWAKIBIZZ
+[2026-07-28 10:47:42.248] [DIAGNOSTIC] PowerShell: 7.6.4 (Core)
+[2026-07-28 10:47:42.248] [DIAGNOSTIC] Working directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:42.249] [DIAGNOSTIC] Node executable: C:\Program Files\nodejs\node.exe
+[2026-07-28 10:47:42.249] [DIAGNOSTIC] npm executable: C:\Program Files\nodejs\npm.cmd
+[2026-07-28 10:47:42.250] [DIAGNOSTIC] Firebase executable: C:\Users\kirwa\AppData\Roaming\npm\firebase.cmd
+[2026-07-28 10:47:42.465] [DIAGNOSTIC] Node.js version: v24.15.0
+[2026-07-28 10:47:43.403] [DIAGNOSTIC] npm version: 11.12.1
+[2026-07-28 10:47:45.461] [DIAGNOSTIC] Firebase CLI version: 15.22.4
+[2026-07-28 10:47:45.468] [DIAGNOSTIC] package.json exists: True
+[2026-07-28 10:47:45.472] [DIAGNOSTIC] node_modules exists: True
+[2026-07-28 10:47:45.473] [DIAGNOSTIC] ========================================
+[2026-07-28 10:47:45.497] [INFO] Package name: kazi-tracker
+[2026-07-28 10:47:45.500] [INFO] Package version: 1.0.0
+[2026-07-28 10:47:45.515] [DIAGNOSTIC] Available npm scripts: dev, build, lint, preview, functions:build, test:rules, import:tasks, fix:kirwa-profile
+
+[2026-07-28 10:47:45.531] [SECTION] ================================================
+[2026-07-28 10:47:45.534] [SECTION] STARTING: LINT VALIDATION
+[2026-07-28 10:47:45.534] [SECTION] COMMAND: npm run lint
+[2026-07-28 10:47:45.535] [SECTION] DIRECTORY: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:45.536] [SECTION] ================================================
+[2026-07-28 10:47:46.506] [OUTPUT] > kazi-tracker@1.0.0 lint
+[2026-07-28 10:47:46.508] [OUTPUT] > eslint .
+[2026-07-28 10:47:49.608] [INFO] LINT VALIDATION duration: 4.04 seconds
+[2026-07-28 10:47:49.611] [INFO] LINT VALIDATION exit code: 0
+[2026-07-28 10:47:49.616] [SUCCESS] LINT VALIDATION completed successfully.
+
+[2026-07-28 10:47:49.618] [SECTION] ================================================
+[2026-07-28 10:47:49.619] [SECTION] STARTING: PRODUCTION BUILD
+[2026-07-28 10:47:49.620] [SECTION] COMMAND: npm run build
+[2026-07-28 10:47:49.621] [SECTION] DIRECTORY: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:47:49.645] [SECTION] ================================================
+[2026-07-28 10:47:50.620] [OUTPUT] > kazi-tracker@1.0.0 build
+[2026-07-28 10:47:50.621] [OUTPUT] > tsc -b && vite build
+[2026-07-28 10:47:56.500] [OUTPUT] vite v7.3.6 building client environment for production...
+[2026-07-28 10:47:57.176] [OUTPUT] transforming...
+[2026-07-28 10:48:04.468] [OUTPUT] Γ£ô 2043 modules transformed.
+[2026-07-28 10:48:05.281] [OUTPUT] rendering chunks...
+[2026-07-28 10:48:05.307] [OUTPUT] computing gzip size...
+[2026-07-28 10:48:05.373] [OUTPUT] dist/index.html                     1.02 kB Γöé gzip:   0.47 kB
+[2026-07-28 10:48:05.374] [OUTPUT] dist/assets/index-C217f4-g.css     46.19 kB Γöé gzip:  10.82 kB
+[2026-07-28 10:48:05.374] [OUTPUT] dist/assets/index-BIeIUSLI.js   1,055.64 kB Γöé gzip: 328.52 kB
+
+[2026-07-28 10:48:05.378] [OUTPUT] (!) Some chunks are larger than 500 kB after minification. Consider:
+[2026-07-28 10:48:05.379] [OUTPUT] - Using dynamic import() to code-split the application
+[2026-07-28 10:48:05.379] [OUTPUT] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[2026-07-28 10:48:05.380] [OUTPUT] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[2026-07-28 10:48:05.380] [OUTPUT] Γ£ô built in 8.86s
+[2026-07-28 10:48:05.564] [INFO] PRODUCTION BUILD duration: 15.92 seconds
+[2026-07-28 10:48:05.565] [INFO] PRODUCTION BUILD exit code: 0
+[2026-07-28 10:48:05.565] [SUCCESS] PRODUCTION BUILD completed successfully.
+
+[2026-07-28 10:48:05.566] [SECTION] ================================================
+[2026-07-28 10:48:05.566] [SECTION] STARTING: FIREBASE HOSTING DEPLOYMENT
+[2026-07-28 10:48:05.566] [SECTION] COMMAND: firebase deploy --only hosting
+[2026-07-28 10:48:05.566] [SECTION] DIRECTORY: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-28 10:48:05.566] [SECTION] ================================================
+[2026-07-28 10:48:14.470] [OUTPUT] === Deploying to 'kazi-tracker-data'...
+[2026-07-28 10:48:14.471] [OUTPUT] i  deploying hosting
+[2026-07-28 10:48:18.506] [OUTPUT] i  hosting[kazi-tracker-data]: beginning deploy...
+[2026-07-28 10:48:18.522] [OUTPUT] i  hosting[kazi-tracker-data]: found 12 files in dist
+[2026-07-28 10:48:20.543] [OUTPUT] i  hosting: uploading new files [0/2] (0%)
+[2026-07-28 10:48:22.245] [OUTPUT] i  hosting: upload complete
+[2026-07-28 10:48:22.246] [OUTPUT] +  hosting[kazi-tracker-data]: file upload complete
+[2026-07-28 10:48:22.246] [OUTPUT] i  hosting[kazi-tracker-data]: finalizing version...
+[2026-07-28 10:48:24.100] [OUTPUT] +  hosting[kazi-tracker-data]: version finalized
+[2026-07-28 10:48:24.101] [OUTPUT] i  hosting[kazi-tracker-data]: releasing new version...
+[2026-07-28 10:48:25.570] [OUTPUT] +  hosting[kazi-tracker-data]: release complete
+[2026-07-28 10:48:25.573] [OUTPUT] +  Deploy complete!
+[2026-07-28 10:48:25.574] [OUTPUT] Project Console: https://console.firebase.google.com/project/kazi-tracker-data/overview
+[2026-07-28 10:48:25.574] [OUTPUT] Hosting URL: https://kazi-tracker-data.web.app
+[2026-07-28 10:48:26.101] [INFO] FIREBASE HOSTING DEPLOYMENT duration: 20.53 seconds
+[2026-07-28 10:48:26.101] [INFO] FIREBASE HOSTING DEPLOYMENT exit code: 0
+[2026-07-28 10:48:26.102] [SUCCESS] FIREBASE HOSTING DEPLOYMENT completed successfully.
+
+[2026-07-28 10:48:26.102] [SUCCESS] ================================================
+[2026-07-28 10:48:26.102] [SUCCESS] KAZI TRACKER PIPELINE COMPLETED SUCCESSFULLY
+[2026-07-28 10:48:26.102] [SUCCESS] LINT STATUS: PASSED
+[2026-07-28 10:48:26.102] [SUCCESS] BUILD STATUS: PASSED
+[2026-07-28 10:48:26.102] [SUCCESS] HOSTING DEPLOY STATUS: PASSED
+[2026-07-28 10:48:26.103] [SUCCESS] ================================================
+[2026-07-28 10:48:26.103] [SUCCESS] Lint validation, production build, and Firebase Hosting deployment completed successfully.

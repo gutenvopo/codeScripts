@@ -1,0 +1,32 @@
+[2026-07-27 22:03:05.755] [SYSTEM] Kazi Tracker automated pipeline initialized.
+[2026-07-27 22:03:05.758] [INFO] Project directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 22:03:05.759] [INFO] Full diagnostic log: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\build-logs\kazi-build_2026-07-27_22-03-05.log
+[2026-07-27 22:03:05.762] [INFO] The pipeline will run lint validation before creating the production build.
+[2026-07-27 22:03:06.140] [SYSTEM] Beginning Kazi Tracker pipeline validation.
+[2026-07-27 22:03:06.140] [INFO] Expected project path: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 22:03:06.143] [INFO] Changing directory using: cd C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 22:03:06.145] [SUCCESS] Successfully entered project directory.
+[2026-07-27 22:03:06.147] [INFO] Resolved working directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 22:03:06.156] [DIAGNOSTIC] ========== SYSTEM DIAGNOSTICS ==========
+[2026-07-27 22:03:06.157] [DIAGNOSTIC] Operating system: Microsoft Windows NT 10.0.26200.0
+[2026-07-27 22:03:06.157] [DIAGNOSTIC] Machine name: RWAKIBIZZ
+[2026-07-27 22:03:06.159] [DIAGNOSTIC] PowerShell version: 7.6.4
+[2026-07-27 22:03:06.160] [DIAGNOSTIC] PowerShell edition: Core
+[2026-07-27 22:03:06.160] [DIAGNOSTIC] Current directory: C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker
+[2026-07-27 22:03:06.160] [DIAGNOSTIC] Node executable: C:\Program Files\nodejs\node.exe
+[2026-07-27 22:03:06.160] [DIAGNOSTIC] npm executable: C:\Program Files\nodejs\npm.cmd
+[2026-07-27 22:03:06.183] [DIAGNOSTIC] Node.js version: v24.15.0
+[2026-07-27 22:03:06.491] [DIAGNOSTIC] npm version: 11.12.1
+[2026-07-27 22:03:06.492] [DIAGNOSTIC] package.json exists: True
+[2026-07-27 22:03:06.493] [DIAGNOSTIC] node_modules exists: True
+[2026-07-27 22:03:06.493] [DIAGNOSTIC] ========================================
+[2026-07-27 22:03:06.502] [INFO] Package name: kazi-tracker
+[2026-07-27 22:03:06.503] [INFO] Package version: 1.0.0
+[2026-07-27 22:03:06.507] [DIAGNOSTIC] Available npm scripts: dev, build, lint, preview, functions:build, test:rules, import:tasks, fix:kirwa-profile
+[2026-07-27 22:03:06.567] [ERROR] The GUI encountered an error while monitoring the build job.
+[2026-07-27 22:03:06.571] [ERROR] Exception type: System.Management.Automation.ParameterBindingValidationException
+[2026-07-27 22:03:06.576] [ERROR] Exception message: Cannot bind argument to parameter 'Message' because it is an empty string.
+[2026-07-27 22:03:06.579] [DIAGNOSTIC] PowerShell stack trace: at Process-BuildJobOutput, C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\run_instructions.ps1: line 435
+at <ScriptBlock>, C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\run_instructions.ps1: line 515
+at <ScriptBlock>, C:\Users\kirwa\Documents\coding\codeScripts\kazi-tracker\run_instructions.ps1: line 1212
+at <ScriptBlock>, <No file>: line 1

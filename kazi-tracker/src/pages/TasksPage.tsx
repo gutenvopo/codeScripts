@@ -18,9 +18,16 @@ import { CheckCircle2, Plus } from "lucide-react";
 import { AddTaskModal } from "../components/AddTaskModal";
 import { TaskItem } from "../components/TaskItem";
 import { TaskList } from "../components/TaskList";
+import { StepTasksDialog } from "../components/StepTasksDialog";
 import { WeatherWidget } from "../components/WeatherWidget";
 import { useTasks } from "../hooks/useTasks";
-import { computeParentState } from "../lib/taskHierarchy";
+import { reportAppError } from "../lib/errorLog";
+import { nairobiDeadlineIso } from "../lib/nairobiDate";
+import {
+  allStepsComplete,
+  computeParentState,
+  isTaskCompletionLocked,
+} from "../lib/taskHierarchy";
 import {
   activeChildren,
   childReorderUpdates,
@@ -28,11 +35,12 @@ import {
   parentReorderUpdates,
   type TaskOrderUpdate,
 } from "../lib/taskOrdering";
-import type { Priority, Task, TaskInput } from "../types/task";
+import type { Priority, StepTask, Task, TaskInput } from "../types/task";
 import type { UserProfile } from "../types/profile";
 
 const priorities: Priority[] = ["high", "medium", "low"];
 const completionAnimationMs = 520;
+const shoppingTitle = "Shopping";
 
 function waitForCompletionAnimation(): Promise<void> {
   return new Promise((resolve) => window.setTimeout(resolve, completionAnimationMs));
@@ -50,18 +58,25 @@ export function TasksPage({
     loading,
     error,
     addTask,
+    addSubtask,
     updateTask,
     removeTask,
     setCompleted,
+    updateStepTasks,
     reorderTasks,
   } = useTasks(uid);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [focusSubtask, setFocusSubtask] = useState(false);
+  const [shoppingOpening, setShoppingOpening] = useState(false);
+  const [shoppingError, setShoppingError] = useState<string | null>(null);
   const [celebratingTaskIds, setCelebratingTaskIds] = useState<Set<string>>(new Set());
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
+  const [stepDialogTaskId, setStepDialogTaskId] = useState<string | null>(null);
   const pendingCompletionIds = useRef<Set<string>>(new Set());
   const previousTasks = useRef<Task[] | null>(null);
   const frozenDragTasks = useRef<Task[] | null>(null);
+  const shoppingActionPending = useRef(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 5 } }),
@@ -104,10 +119,7 @@ export function TasksPage({
     () =>
       new Set(
         tasks
-          .filter((task) => {
-            const state = computeParentState(task.id, tasks);
-            return state.hasChildren && !state.allChildrenComplete;
-          })
+          .filter((task) => isTaskCompletionLocked(task, tasks))
           .map((task) => task.id),
       ),
     [tasks],
@@ -150,7 +162,9 @@ export function TasksPage({
       const priorState = computeParentState(parent.id, priorTasks);
       const currentState = computeParentState(parent.id, tasks);
       if (!priorState.allChildrenComplete && currentState.allChildrenComplete) {
-        if (!parent.completed) void autoCompleteParent(parent.id);
+        if (!parent.completed && allStepsComplete(parent)) {
+          void autoCompleteParent(parent.id);
+        }
       } else if (
         priorState.allChildrenComplete &&
         !currentState.allChildrenComplete &&
@@ -181,7 +195,8 @@ export function TasksPage({
         if (
           parent &&
           !parent.completed &&
-          computeParentState(parent.id, projected).allChildrenComplete
+          computeParentState(parent.id, projected).allChildrenComplete &&
+          allStepsComplete(parent)
         ) {
           celebrationIds.push(parent.id);
         }
@@ -203,12 +218,65 @@ export function TasksPage({
 
   function openNewTask(): void {
     setEditingTask(null);
+    setFocusSubtask(false);
     setModalOpen(true);
   }
 
   function openEditTask(task: Task): void {
     setEditingTask(task);
+    setFocusSubtask(false);
     setModalOpen(true);
+  }
+
+  async function openShoppingSubtask(): Promise<void> {
+    if (shoppingActionPending.current || loading) return;
+    shoppingActionPending.current = true;
+    setShoppingOpening(true);
+    setShoppingError(null);
+    try {
+      const existingShopping = tasks.find(
+        (task) =>
+          !task.completed
+          && !task.parentId
+          && task.priority === "medium"
+          && task.title.trim().toLocaleLowerCase() === shoppingTitle.toLowerCase(),
+      );
+      const shoppingTask = existingShopping ?? await addTask({
+        title: shoppingTitle,
+        priority: "medium",
+        deadline: nairobiDeadlineIso("23:59"),
+        parentId: null,
+        recurring: false,
+      });
+      setEditingTask(shoppingTask);
+      setFocusSubtask(true);
+      setModalOpen(true);
+    } catch (caught) {
+      reportAppError(caught, "Shopping quick action");
+      setShoppingError(
+        caught instanceof Error
+          ? caught.message
+          : "Could not open the Shopping task.",
+      );
+    } finally {
+      shoppingActionPending.current = false;
+      setShoppingOpening(false);
+    }
+  }
+
+  function closeTaskModal(): void {
+    setModalOpen(false);
+    setFocusSubtask(false);
+  }
+
+  async function saveStepTasks(
+    taskId: string,
+    steps: StepTask[],
+  ): Promise<void> {
+    setEditingTask((current) =>
+      current?.id === taskId ? { ...current, steps } : current,
+    );
+    await updateStepTasks(taskId, steps);
   }
 
   async function saveTask(input: TaskInput): Promise<void> {
@@ -277,7 +345,7 @@ export function TasksPage({
           {greetingName ? `Welcome back, ${greetingName}` : "Hello"}
         </p>
       </div>
-      <WeatherWidget />
+      <WeatherWidget uid={uid} />
       <div className="page-heading">
         <div>
           <span className="eyebrow">Today’s command centre</span>
@@ -293,7 +361,9 @@ export function TasksPage({
         </button>
       </div>
 
-      {error && <div className="error-banner">{error}</div>}
+      {(shoppingError ?? error) && (
+        <div className="error-banner">{shoppingError ?? error}</div>
+      )}
       {loading ? (
         <div className="loading-grid">
           <div /><div /><div />
@@ -318,6 +388,7 @@ export function TasksPage({
                 celebratingTaskIds={celebratingTaskIds}
                 onEdit={openEditTask}
                 onComplete={handleCompletion}
+                onOpenSteps={(task) => setStepDialogTaskId(task.id)}
               />
             ))}
           </div>
@@ -370,6 +441,7 @@ export function TasksPage({
                 celebrating={celebratingTaskIds.has(parent.id)}
                 onEdit={openEditTask}
                 onComplete={handleCompletion}
+                onOpenSteps={(task) => setStepDialogTaskId(task.id)}
               />
               {children.map((child) => (
                 <div key={child.id} className="completed-child-task">
@@ -379,6 +451,7 @@ export function TasksPage({
                     celebrating={celebratingTaskIds.has(child.id)}
                     onEdit={openEditTask}
                     onComplete={handleCompletion}
+                    onOpenSteps={(task) => setStepDialogTaskId(task.id)}
                   />
                 </div>
               ))}
@@ -390,15 +463,42 @@ export function TasksPage({
         )}
       </section>
 
-      <button className="mobile-add" onClick={openNewTask} aria-label="Add task">
-        <Plus size={24} />
-      </button>
+      <div className="floating-task-actions" aria-label="Quick task actions">
+        <button
+          className="floating-task-action floating-shopping-action"
+          type="button"
+          disabled={shoppingOpening || loading}
+          onClick={() => void openShoppingSubtask()}
+          aria-label="Add a Shopping subtask"
+        >
+          <span className="floating-action-icon"><Plus size={25} /></span>
+          <span className="floating-action-label">
+            {shoppingOpening ? "Opening…" : "Shopping"}
+          </span>
+        </button>
+        <button
+          className="floating-task-action floating-add-action"
+          type="button"
+          onClick={openNewTask}
+          aria-label="Add task"
+        >
+          <span className="floating-action-icon"><Plus size={25} /></span>
+          <span className="floating-action-label">Task</span>
+        </button>
+      </div>
       <AddTaskModal
         open={modalOpen}
-        task={editingTask}
+        task={
+          editingTask
+            ? tasks.find((task) => task.id === editingTask.id) ?? editingTask
+            : null
+        }
         tasks={openTasks}
-        onClose={() => setModalOpen(false)}
+        focusSubtask={focusSubtask}
+        onClose={closeTaskModal}
         onSave={saveTask}
+        onAddSubtask={addSubtask}
+        onUpdateSteps={saveStepTasks}
         onDelete={
           editingTask
             ? async () => {
@@ -408,6 +508,15 @@ export function TasksPage({
               }
             : undefined
         }
+      />
+      <StepTasksDialog
+        task={
+          stepDialogTaskId
+            ? tasks.find((task) => task.id === stepDialogTaskId) ?? null
+            : null
+        }
+        onClose={() => setStepDialogTaskId(null)}
+        onChange={saveStepTasks}
       />
     </main>
   );

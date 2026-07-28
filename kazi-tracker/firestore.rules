@@ -40,7 +40,7 @@ service cloud.firestore {
         ])
         && data.keys().hasOnly([
           'id', 'title', 'priority', 'deadline', 'order', 'completed',
-          'completedAt', 'createdAt', 'date', 'parentId'
+          'completedAt', 'createdAt', 'date', 'parentId', 'recurring', 'steps'
         ])
         && data.id == taskId
         && hasLength(data.title, 1, 500)
@@ -57,6 +57,11 @@ service cloud.firestore {
         && data.createdAt is timestamp
         && data.date is string
         && data.date.matches('^\\d{4}-\\d{2}-\\d{2}$')
+        && (!('recurring' in data) || data.recurring is bool)
+        && (
+          !('steps' in data)
+          || (data.steps is list && data.steps.size() <= 100)
+        )
         && (
           data.parentId == null
           || (

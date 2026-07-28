@@ -207,6 +207,8 @@ async function writeTasks(
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         date,
         parentId: task.parentIndex === null ? null : references[task.parentIndex].id,
+        recurring: false,
+        steps: [],
       });
     });
     await batch.commit();

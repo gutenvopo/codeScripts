@@ -18,6 +18,7 @@ interface TaskListProps {
   celebratingTaskIds: Set<string>;
   onEdit: (task: Task) => void;
   onComplete: (taskId: string, completed: boolean) => Promise<void>;
+  onOpenSteps: (task: Task) => void;
 }
 
 interface SortableTaskProps {
@@ -28,6 +29,7 @@ interface SortableTaskProps {
   celebrating: boolean;
   onEdit: (task: Task) => void;
   onComplete: (taskId: string, completed: boolean) => Promise<void>;
+  onOpenSteps: (task: Task) => void;
 }
 
 const headings: Record<Priority, { title: string; eyebrow: string }> = {
@@ -44,6 +46,7 @@ function SortableChild({
   celebrating,
   onEdit,
   onComplete,
+  onOpenSteps,
 }: SortableTaskProps) {
   const {
     attributes,
@@ -79,6 +82,7 @@ function SortableChild({
             celebrating={celebrating}
             onEdit={onEdit}
             onComplete={onComplete}
+            onOpenSteps={onOpenSteps}
           />
         </div>
       </div>
@@ -94,6 +98,7 @@ function SortableFamily({
   celebratingTaskIds,
   onEdit,
   onComplete,
+  onOpenSteps,
 }: {
   parent: Task;
   children: Task[];
@@ -102,6 +107,7 @@ function SortableFamily({
   celebratingTaskIds: Set<string>;
   onEdit: (task: Task) => void;
   onComplete: (taskId: string, completed: boolean) => Promise<void>;
+  onOpenSteps: (task: Task) => void;
 }) {
   const {
     attributes,
@@ -137,6 +143,7 @@ function SortableFamily({
             celebrating={celebratingTaskIds.has(parent.id)}
             onEdit={onEdit}
             onComplete={onComplete}
+            onOpenSteps={onOpenSteps}
           />
         </div>
       </div>
@@ -154,6 +161,7 @@ function SortableFamily({
             celebrating={celebratingTaskIds.has(child.id)}
             onEdit={onEdit}
             onComplete={onComplete}
+            onOpenSteps={onOpenSteps}
           />
         ))}
       </SortableContext>
@@ -169,6 +177,7 @@ export function TaskList({
   celebratingTaskIds,
   onEdit,
   onComplete,
+  onOpenSteps,
 }: TaskListProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `group-${priority}`,
@@ -207,6 +216,7 @@ export function TaskList({
               celebratingTaskIds={celebratingTaskIds}
               onEdit={onEdit}
               onComplete={onComplete}
+              onOpenSteps={onOpenSteps}
             />
           ))}
           {parents.length === 0 && (
